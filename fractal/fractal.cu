@@ -1,3 +1,6 @@
+#include <stdlib.h>
+#include <stdio.h>
+
 /* Class to represent one image pixel */
 struct pixel {
 	unsigned char r,g,b;
@@ -40,23 +43,19 @@ int main(void) {
 	pixel* gpu_pixels;
 	cudaMalloc(&gpu_pixels, wid*ht*sizeof(pixel));
 
-	// Make space for output data
-	//gpu_vec<pixel> gpu_image(wid*ht);
-
 	draw_image<<<wid,ht>>>(gpu_pixels,wid,ht);
 
 	cudaMemcpy(pixels, gpu_pixels, wid*ht*sizeof(pixel), cudaMemcpyDeviceToHost);
 
-	//printf("render: %.4f ns/pixel\n", elapsed*1.0e9/(wid*ht));
+	FILE *file = fopen("image.ppm","wb");
+	fprintf(file, "P6\n%d %d\n255\n",wid, ht);
+	for(int i=0; i<wid*ht; i++) {
+		static unsigned char color[3];
+    color[0] = pixels[i].r;
+    color[1] = pixels[i].g;
+    color[2] = pixels[i].b;
+    fwrite(color, 1, 3, file);
+	}
+	fclose(file);
 
-	// Copy rendered image back to CPU
-	//std::vector<pixel> img;
-	//gpu_image.copy_to(img);
-
-	// Copy the image data back to the CPU, and write to file
-	/*
-	std::ofstream imgfile("out.ppm",std::ios_base::binary);
-	imgfile<<"P6\n"<<wid<<" "<<ht<<" 255\n";
-	imgfile.write((char *)&img[0],wid*ht*sizeof(pixel));
-	*/
 }
