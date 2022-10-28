@@ -13,7 +13,7 @@ __global__ void draw_image(pixel *image,int wid,int ht) {
 	{
 		int x=i%wid, y=i/wid;
 		float fx=x*(1.0/wid), fy=y*(1.0/ht);
-		float scale=1.0; // amount of the mandelbrot set to draw
+		float scale=1; // amount of the mandelbrot set to draw
 		fx*=scale; fy*=scale;
 
 		float ci=fy, cr=fx; // complex constant: x,y coordinates
@@ -35,7 +35,7 @@ __global__ void draw_image(pixel *image,int wid,int ht) {
 
 /* Run on CPU */
 int main(void) {
-	int wid=512,ht=512;
+	int wid=4096,ht=4096;
 
 	pixel* pixels;
 	pixels = (pixel*) malloc(wid*ht*sizeof(pixel));
@@ -43,7 +43,7 @@ int main(void) {
 	pixel* gpu_pixels;
 	cudaMalloc(&gpu_pixels, wid*ht*sizeof(pixel));
 
-	draw_image<<<wid,ht>>>(gpu_pixels,wid,ht);
+	draw_image<<<(wid*ht)/128,128>>>(gpu_pixels,wid,ht);
 
 	cudaMemcpy(pixels, gpu_pixels, wid*ht*sizeof(pixel), cudaMemcpyDeviceToHost);
 
