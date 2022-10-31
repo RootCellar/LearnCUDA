@@ -1,1 +1,1 @@
-nvcc -o fractal fractal.cu
+nvcc -o fractal fractalparam.cu
