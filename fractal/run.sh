@@ -1,1 +1,1 @@
-time ./fractal
+time ./fractal $@
