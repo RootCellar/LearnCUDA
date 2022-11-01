@@ -79,6 +79,11 @@ int makeImage(char* fileName, float param1, float param2) {
 	draw_image<<<(wid*ht)/512,512>>>(gpu_pixels,wid,ht,param1, param2);
 	printf("Drawing called.\n");
 
+	// Note: It turns out that any code in this space CAN be executed while
+	// the graphics card is still working - this section won't be stopped
+	// until we need the GPU again
+	//printf("Test\n");
+
 	cudaMemcpy(pixels, gpu_pixels, wid*ht*sizeof(pixel), cudaMemcpyDeviceToHost);
 	printf("Drawing finished.\n");
 
