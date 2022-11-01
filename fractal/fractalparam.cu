@@ -19,13 +19,13 @@ struct pixel {
 };
 
 /* GPU Code to render mandelbrot set fractal */
-__global__ void draw_image(pixel *image,int wid,int ht, float param) {
+__global__ void draw_image(pixel *image,int wid,int ht, float param1, float param2) {
 	//for (int i=0;i<wid*ht;i++) // loop over all the pixels
 	long i = threadIdx.x + blockIdx.x * blockDim.x;
 	{
 		int x=i%wid, y=i/wid;
 		float fx=x*(1.0/wid), fy=y*(1.0/ht);
-		float scale=0.8; // amount of the mandelbrot set to draw
+		float scale=1; // amount of the mandelbrot set to draw
 		fx*=scale; fy*=scale;
 
 		float ci=fy, cr=fx; // complex constant: x,y coordinates
@@ -35,7 +35,7 @@ __global__ void draw_image(pixel *image,int wid,int ht, float param) {
 		for (iter=0;iter<2500;iter++) {
 			if (zi*zi+zr*zr>4.0) break; // number too big--stop iterating
 			// z = z*z + c
-			zr_new=zr*zr*param-zi*zi*param+cr;
+			zr_new=zr*zr*param1-zi*zi*param2+cr;
 			zi_new=2*zr*zi+ci;
 			zr=zr_new; zi=zi_new;
 		}
@@ -46,24 +46,26 @@ __global__ void draw_image(pixel *image,int wid,int ht, float param) {
 	}
 }
 
-int makeImage(char*, float);
+int makeImage(char*, float, float);
 
 int main(int argc, char** argv) {
 
-	if(argc < 3) {
-		printf("Usage: %s <number> <file name>\n", argv[0]);
+	if(argc < 4) {
+		printf("Usage: %s <number> <number> <file name>\n", argv[0]);
 		return -1;
 	}
 
-	float param = 0;
-	sscanf(argv[1], "%f", &param);
+	float param1 = 0, param2 = 0;
+	sscanf(argv[1], "%f", &param1);
+	sscanf(argv[2], "%f", &param2);
 
-	makeImage(argv[2], param);
+	makeImage(argv[3], param1, param2);
 }
 
 /* Run on CPU */
-int makeImage(char* fileName, float param) {
-	debug_print("Param: %f\n", param);
+int makeImage(char* fileName, float param1, float param2) {
+	debug_print("Param 1: %f\n", param1);
+	debug_print("Param 2: %f\n", param2);
 
 	int wid=16384,ht=16384;
 
@@ -74,7 +76,7 @@ int makeImage(char* fileName, float param) {
 	cudaMalloc(&gpu_pixels, wid*ht*sizeof(pixel));
 
 	printf("Beginning to draw...\n");
-	draw_image<<<(wid*ht)/512,512>>>(gpu_pixels,wid,ht,param);
+	draw_image<<<(wid*ht)/512,512>>>(gpu_pixels,wid,ht,param1, param2);
 	printf("Drawing called.\n");
 
 	cudaMemcpy(pixels, gpu_pixels, wid*ht*sizeof(pixel), cudaMemcpyDeviceToHost);
