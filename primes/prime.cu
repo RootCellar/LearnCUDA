@@ -30,8 +30,10 @@ void isPrime(int n, int *x, int *nums)
     return;
   }
 
+  int num_stop = sqrtf(nums[j]);
+
   // Find a case that means it isn't prime
-  for(int i=2; i <= sqrtf(nums[j]); i++) {
+  for(int i=2; i <= num_stop; i++) {
         if(nums[j]%i == 0) {
           x[j]=0;
           return;
@@ -39,10 +41,6 @@ void isPrime(int n, int *x, int *nums)
   }
 
 }
-
-// TODO: for large number of primes, cycle through sets of them at a set size
-// so that any number of primes can be found (assuming large hard drive space)
-// on any RAM or VRAM size
 
 // PSEUDOCODE:
 
@@ -59,20 +57,20 @@ void isPrime(int n, int *x, int *nums)
 
 int main(void)
 {
-  // Just over half a billion primes at 1<<29, consumes ~2.5 GB VRAM
+  // Just over half a billion primes at 1<<29, consumes ~5 GB VRAM
   // if done in one pass
-  int N_total = 1<<30; // the number we will search up to
-  int N = N_total/(1<<4); // how many per pass
+  int N_total = 1<<24; // the number we will search up to
+  int N = N_total/(1<<3); // how many per pass
   int previous_max = 0;
 
-  debug_printf("%d primes total, %d primes per pass\n", N_total, N);
+  debug_printf("%d numbers total, %d numbers per pass\n", N_total, N);
 
   // Pointers
   int *x, *d_x;
   int *nums, *gpu_nums;
 
   debug_print("Making block sizes...\n");
-  int blockSize = 128;
+  int blockSize = 64;
   if( N < 4096 ) {
     blockSize = 1;
   }
@@ -94,13 +92,13 @@ int main(void)
     // initialize list
     debug_print("Making list...\n");
     for (int i = 0; i < N; i++) {
-      x[i] = 0;
+      //x[i] = 0;
       nums[i] = i+previous_max;
     }
 
     // Copy host list to VRAM list
     debug_print("Copying to VRAM..\n");
-    cudaMemcpy(d_x, x, N*sizeof(int), cudaMemcpyHostToDevice);
+    //cudaMemcpy(d_x, x, N*sizeof(int), cudaMemcpyHostToDevice);
     cudaMemcpy(gpu_nums, nums, N*sizeof(int), cudaMemcpyHostToDevice);
 
     // Run the calculation
