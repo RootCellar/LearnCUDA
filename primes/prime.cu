@@ -9,11 +9,11 @@
 #define DEBUG 1
 
 #define debug_printf(fmt, ...) \
-        do { if (DEBUG) fprintf(stdout, "%s:%d:%s(): " fmt, __FILE__, \
+        do { if (DEBUG) fprintf(stderr, "%s:%d:%s(): " fmt, __FILE__, \
                                 __LINE__, __func__, __VA_ARGS__); } while (0)
 
 #define debug_print(fmt) \
-        do { if (DEBUG) fprintf(stdout, "%s:%d:%s(): " fmt, __FILE__, \
+        do { if (DEBUG) fprintf(stderr, "%s:%d:%s(): " fmt, __FILE__, \
                                 __LINE__, __func__); } while (0)
 
 __global__
