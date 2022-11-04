@@ -49,7 +49,7 @@ void isPrime(int n, float a, int *x, int *nums)
     copy array to VRAM
     find the primes
     copy back to RAM
-    write to file
+    print/write to file
 
 */
 
