@@ -25,6 +25,23 @@ void isPrime(int n, float a, int *x)
 
 }
 
+// TODO: for large number of primes, cycle through sets of them at a set size
+// so that any number of primes can be found (assuming large hard drive space)
+// on any RAM or VRAM size
+
+// PSEUDOCODE:
+
+/*
+
+  for(each set)
+    setup array in RAM
+    copy arram to VRAM
+    find the primes
+    copy back to RAM
+    write to file
+
+*/
+
 int main(void)
 {
   //Just over half a billion primes, consumes ~2.5 GB VRAM
