@@ -8,9 +8,13 @@
 
 #define DEBUG 1
 
-#define debug_print(fmt, ...) \
+#define debug_printf(fmt, ...) \
         do { if (DEBUG) fprintf(stdout, "%s:%d:%s(): " fmt, __FILE__, \
                                 __LINE__, __func__, __VA_ARGS__); } while (0)
+
+#define debug_print(fmt) \
+        do { if (DEBUG) fprintf(stdout, "%s:%d:%s(): " fmt, __FILE__, \
+                                __LINE__, __func__); } while (0)
 
 __global__
 void isPrime(int n, int *x, int *nums)
@@ -61,11 +65,17 @@ int main(void)
   int N = N_total/(1<<4); // how many per pass
   int previous_max = 0;
 
-  debug_print("%d primes total, %d primes per pass\n", N_total, N);
+  debug_printf("%d primes total, %d primes per pass\n", N_total, N);
 
   // Pointers
   int *x, *d_x;
   int *nums, *gpu_nums;
+
+  debug_print("Making block sizes...\n");
+  int blockSize = 128;
+  if( N < 4096 ) {
+    blockSize = 1;
+  }
 
   // List of primes in RAM
   x = (int*)malloc(N*sizeof(int));
@@ -77,30 +87,35 @@ int main(void)
 
   while(previous_max < N_total) {
 
-    debug_print("Handling %d to %d\n", previous_max, previous_max + N);
+    debug_printf("Handling %d to %d\n", previous_max, previous_max + N);
 
     ///*
 
     // initialize list
+    debug_print("Making list...\n");
     for (int i = 0; i < N; i++) {
-      x[i] = 1;
+      x[i] = 0;
       nums[i] = i+previous_max;
     }
 
     // Copy host list to VRAM list
+    debug_print("Copying to VRAM..\n");
     cudaMemcpy(d_x, x, N*sizeof(int), cudaMemcpyHostToDevice);
     cudaMemcpy(gpu_nums, nums, N*sizeof(int), cudaMemcpyHostToDevice);
 
     // Run the calculation
-    isPrime<<<N/128, 128>>>(N, d_x, gpu_nums);
+    debug_print("Calculating...\n");
+    isPrime<<<N/blockSize, blockSize>>>(N, d_x, gpu_nums);
 
     // Copy results back to host RAM
     cudaMemcpy(x, d_x, N*sizeof(int), cudaMemcpyDeviceToHost);
-    cudaMemcpy(nums, gpu_nums, N*sizeof(int), cudaMemcpyDeviceToHost);
+    //cudaMemcpy(nums, gpu_nums, N*sizeof(int), cudaMemcpyDeviceToHost);
+    debug_print("Copied back to RAM\n");
 
     // Display results
+    debug_print("Displaying results...\n");
     for(int i=0; i < N; i++) {
-      if(x[i] == 1) printf("%d\n", i);
+      if(x[i] == 1) printf("%d\n", nums[i]);
     }
 
     //*/
