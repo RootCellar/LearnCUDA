@@ -25,15 +25,21 @@ void isPrime(int n, int *x, int *nums)
   // Assume it is prime
   x[j]=1;
 
+  // Find a case that means it isn't prime
+
   if(nums[j] < 2) {
+    x[j] = 0;
+    return;
+  }
+
+  if(nums[j]%2 == 0) {
     x[j] = 0;
     return;
   }
 
   int num_stop = sqrtf(nums[j]);
 
-  // Find a case that means it isn't prime
-  for(int i=2; i <= num_stop; i++) {
+  for(int i=3; i <= num_stop; i+=2) {
         if(nums[j]%i == 0) {
           x[j]=0;
           return;
@@ -59,7 +65,8 @@ int main(void)
 {
   // Just over half a billion primes at 1<<29, consumes ~5 GB VRAM
   // if done in one pass
-  int N_total = 1<<24; // the number we will search up to
+  int N_total = 1<<27; // the number we will search up to
+  //int N_total = 100000000;
   int N = N_total/(1<<3); // how many per pass
   int previous_max = 0;
 
