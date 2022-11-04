@@ -6,8 +6,14 @@
 #include <stdio.h>
 #include <math.h>
 
+#define DEBUG 1
+
+#define debug_print(fmt, ...) \
+        do { if (DEBUG) fprintf(stdout, "%s:%d:%s(): " fmt, __FILE__, \
+                                __LINE__, __func__, __VA_ARGS__); } while (0)
+
 __global__
-void isPrime(int n, float a, int *x)
+void isPrime(int n, float a, int *x, int *nums)
 {
   // Find which number we are checking
   int j = blockIdx.x*blockDim.x + threadIdx.x;
@@ -17,7 +23,7 @@ void isPrime(int n, float a, int *x)
 
   // Find a case that means it isn't prime
   for(int i=2; i <= sqrtf(j); i++) {
-        if(j%i == 0) {
+        if(nums[j]%i == 0) {
           x[j]=0;
           return;
         }
@@ -45,37 +51,61 @@ void isPrime(int n, float a, int *x)
 int main(void)
 {
   //Just over half a billion primes, consumes ~2.5 GB VRAM
-  int N = 1<<29;
+  int N_total = 1<<30;
+  int N = N_total/(1<<4);
+  int previous_max = 0;
+
+  debug_print("%d primes total, %d primes per pass\n", N_total, N);
 
   // Pointers
   int *x, *d_x;
+  int *nums, *gpu_nums;
 
   // List of primes in RAM
   x = (int*)malloc(N*sizeof(int));
+  nums = (int*) malloc(N*sizeof(int));
 
   // Same list in VRAM
   cudaMalloc(&d_x, N*sizeof(int));
+  cudaMalloc(&gpu_nums, N*sizeof(int));
 
-  // initialize list
-  for (int i = 0; i < N; i++) {
-    x[i] = 1;
-  }
+  while(previous_max < N_total) {
 
-  // Copy host list to VRAM list
-  cudaMemcpy(d_x, x, N*sizeof(int), cudaMemcpyHostToDevice);
+    debug_print("Handling %d to %d\n", previous_max, previous_max + N);
 
-  // Run the calculation
-  isPrime<<<N/128, 128>>>(N, 2.0f, d_x);
+    /*
 
-  // Copy results back to host RAM
-  cudaMemcpy(x, d_x, N*sizeof(int), cudaMemcpyDeviceToHost);
+    // initialize list
+    for (int i = 0; i < N; i++) {
+      x[i] = 1;
+      nums[i] = i+previous_max;
+    }
 
-  // Display results
-  for(int i=0; i < N; i++) {
-    if(x[i] == 1) printf("%d\n", i);
+    // Copy host list to VRAM list
+    cudaMemcpy(d_x, x, N*sizeof(int), cudaMemcpyHostToDevice);
+    cudaMemcpy(gpu_nums, nums, N*sizeof(int), cudaMemcpyHostToDevice);
+
+    // Run the calculation
+    isPrime<<<N/128, 128>>>(N, 2.0f, d_x, gpu_nums);
+
+    // Copy results back to host RAM
+    cudaMemcpy(x, d_x, N*sizeof(int), cudaMemcpyDeviceToHost);
+    cudaMemcpy(nums, gpu_nums, N*sizeof(int), cudaMemcpyDeviceToHost);
+
+    // Display results
+    for(int i=0; i < N; i++) {
+      if(x[i] == 1) printf("%d\n", i);
+    }
+
+    */
+
+    previous_max = previous_max + N;
+
   }
 
   // Cleanup
   cudaFree(d_x);
+  cudaFree(gpu_nums);
   free(x);
+  free(nums);
 }
