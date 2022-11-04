@@ -13,7 +13,7 @@
                                 __LINE__, __func__, __VA_ARGS__); } while (0)
 
 __global__
-void isPrime(int n, float a, int *x, int *nums)
+void isPrime(int n, int *x, int *nums)
 {
   // Find which number we are checking
   int j = blockIdx.x*blockDim.x + threadIdx.x;
@@ -79,7 +79,7 @@ int main(void)
 
     debug_print("Handling %d to %d\n", previous_max, previous_max + N);
 
-    /*
+    ///*
 
     // initialize list
     for (int i = 0; i < N; i++) {
@@ -92,7 +92,7 @@ int main(void)
     cudaMemcpy(gpu_nums, nums, N*sizeof(int), cudaMemcpyHostToDevice);
 
     // Run the calculation
-    isPrime<<<N/128, 128>>>(N, 2.0f, d_x, gpu_nums);
+    isPrime<<<N/128, 128>>>(N, d_x, gpu_nums);
 
     // Copy results back to host RAM
     cudaMemcpy(x, d_x, N*sizeof(int), cudaMemcpyDeviceToHost);
@@ -103,7 +103,7 @@ int main(void)
       if(x[i] == 1) printf("%d\n", i);
     }
 
-    */
+    //*/
 
     previous_max = previous_max + N;
 
