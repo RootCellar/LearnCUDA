@@ -8,6 +8,10 @@
 
 #define DEBUG 1
 
+/*
+ * Useful debug function define I found online
+*/
+
 #define debug_printf(fmt, ...) \
         do { if (DEBUG) fprintf(stderr, "%s:%d:%s(): " fmt, __FILE__, \
                                 __LINE__, __func__, __VA_ARGS__); } while (0)
@@ -16,14 +20,17 @@
         do { if (DEBUG) fprintf(stderr, "%s:%d:%s(): " fmt, __FILE__, \
                                 __LINE__, __func__); } while (0)
 
-__global__
-void isPrime(int n, int *x, int *nums)
+/*
+ * nums: pointer to the array of numbers in graphics card memory
+ * x: array of trues and falses for each number (whether or not they are prime)
+*/
+__global__ void isPrime(int* x, int* nums)
 {
   // Find which number we are checking
-  int j = blockIdx.x*blockDim.x + threadIdx.x;
+  int j = blockIdx.x * blockDim.x + threadIdx.x;
 
   // Assume it is prime
-  x[j]=1;
+  x[j] = 1;
 
   // Find a case that means it isn't prime
 
@@ -39,9 +46,9 @@ void isPrime(int n, int *x, int *nums)
 
   int num_stop = sqrtf(nums[j]);
 
-  for(int i=3; i <= num_stop; i+=2) {
-        if(nums[j]%i == 0) {
-          x[j]=0;
+  for(int i = 3; i <= num_stop; i += 2) {
+        if( nums[j] % i == 0 ) {
+          x[j] = 0;
           return;
         }
   }
@@ -67,7 +74,7 @@ int main(void)
   // if done in one pass
   int N_total = 1<<27; // the number we will search up to
   //int N_total = 100000000;
-  int N = N_total/(1<<3); // how many per pass
+  int N = N_total / (1<<3); // how many per pass
   int previous_max = 0;
 
   debug_printf("%d numbers total, %d numbers per pass\n", N_total, N);
@@ -83,12 +90,12 @@ int main(void)
   }
 
   // List of primes in RAM
-  x = (int*)malloc(N*sizeof(int));
-  nums = (int*) malloc(N*sizeof(int));
+  x = (int*) malloc(N * sizeof(int));
+  nums = (int*) malloc(N * sizeof(int));
 
   // Same list in VRAM
-  cudaMalloc(&d_x, N*sizeof(int));
-  cudaMalloc(&gpu_nums, N*sizeof(int));
+  cudaMalloc(&d_x, N * sizeof(int));
+  cudaMalloc(&gpu_nums, N * sizeof(int));
 
   while(previous_max < N_total) {
 
@@ -99,27 +106,24 @@ int main(void)
     // initialize list
     debug_print("Making list...\n");
     for (int i = 0; i < N; i++) {
-      //x[i] = 0;
-      nums[i] = i+previous_max;
+      nums[i] = i + previous_max;
     }
 
     // Copy host list to VRAM list
     debug_print("Copying to VRAM..\n");
-    //cudaMemcpy(d_x, x, N*sizeof(int), cudaMemcpyHostToDevice);
-    cudaMemcpy(gpu_nums, nums, N*sizeof(int), cudaMemcpyHostToDevice);
+    cudaMemcpy(gpu_nums, nums, N * sizeof(int), cudaMemcpyHostToDevice);
 
     // Run the calculation
     debug_print("Calculating...\n");
-    isPrime<<<N/blockSize, blockSize>>>(N, d_x, gpu_nums);
+    isPrime<<<N/blockSize, blockSize>>>(d_x, gpu_nums);
 
     // Copy results back to host RAM
-    cudaMemcpy(x, d_x, N*sizeof(int), cudaMemcpyDeviceToHost);
-    //cudaMemcpy(nums, gpu_nums, N*sizeof(int), cudaMemcpyDeviceToHost);
+    cudaMemcpy(x, d_x, N * sizeof(int), cudaMemcpyDeviceToHost);
     debug_print("Copied back to RAM\n");
 
     // Display results
     debug_print("Displaying results...\n");
-    for(int i=0; i < N; i++) {
+    for(int i = 0; i < N; i++) {
       if(x[i] == 1) printf("%d\n", nums[i]);
     }
 
