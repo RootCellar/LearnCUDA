@@ -21,8 +21,13 @@ void isPrime(int n, float a, int *x, int *nums)
   // Assume it is prime
   x[j]=1;
 
+  if(nums[j] < 2) {
+    x[j] = 0;
+    return;
+  }
+
   // Find a case that means it isn't prime
-  for(int i=2; i <= sqrtf(j); i++) {
+  for(int i=2; i <= sqrtf(nums[j]); i++) {
         if(nums[j]%i == 0) {
           x[j]=0;
           return;
@@ -41,7 +46,7 @@ void isPrime(int n, float a, int *x, int *nums)
 
   for(each set)
     setup array in RAM
-    copy arram to VRAM
+    copy array to VRAM
     find the primes
     copy back to RAM
     write to file
@@ -50,9 +55,10 @@ void isPrime(int n, float a, int *x, int *nums)
 
 int main(void)
 {
-  //Just over half a billion primes, consumes ~2.5 GB VRAM
-  int N_total = 1<<30;
-  int N = N_total/(1<<4);
+  // Just over half a billion primes at 1<<29, consumes ~2.5 GB VRAM
+  // if done in one pass
+  int N_total = 1<<30; // the number we will search up to
+  int N = N_total/(1<<4); // how many per pass
   int previous_max = 0;
 
   debug_print("%d primes total, %d primes per pass\n", N_total, N);
