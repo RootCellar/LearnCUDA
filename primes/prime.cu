@@ -20,6 +20,9 @@
         do { if (DEBUG) fprintf(stderr, "%s:%d:%s(): " fmt, __FILE__, \
                                 __LINE__, __func__); } while (0)
 
+
+void findPrimes(int countScale, int sectionScale);
+
 /*
  * nums: pointer to the array of numbers in graphics card memory
  * x: array of trues and falses for each number (whether or not they are prime)
@@ -68,13 +71,33 @@ __global__ void isPrime(int* x, int* nums)
 
 */
 
-int main(void)
+int main(int argc, char** argv)
+{
+  int param1 = 5, param2 = 3;
+  if(argc >= 2) {
+    sscanf(argv[1], "%d", &param1);
+  }
+  if(argc >= 3) {
+    sscanf(argv[2], "%d", &param2);
+  }
+
+  debug_printf("%d %d\n", param1, param2);
+
+  if(param2 > param1) {
+    printf("2nd parameter cannot be larger than 1st parameter\n");
+    exit(1);
+  }
+
+  findPrimes(param1, param2);
+}
+
+void findPrimes(int countScale, int sectionScale)
 {
   // Just over half a billion primes at 1<<29, consumes ~5 GB VRAM
   // if done in one pass
-  int N_total = 1<<27; // the number we will search up to
+  int N_total = 1<<countScale; // the number we will search up to
   //int N_total = 100000000;
-  int N = N_total / (1<<3); // how many per pass
+  int N = N_total / (1<<sectionScale); // how many per pass
   int previous_max = 0;
 
   debug_printf("%d numbers total, %d numbers per pass\n", N_total, N);
