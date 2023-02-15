@@ -117,6 +117,8 @@ void findPrimes(int countScale, int sectionScale)
     blockSize = 1;
   }
 
+  // TODO: check for errors on these four memory allocations
+
   // List of primes in RAM
   x = (int*) malloc(N * sizeof(int));
   nums = (int*) malloc(N * sizeof(int));
