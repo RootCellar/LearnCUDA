@@ -62,6 +62,11 @@ __global__ void isPrime(int* x, int* nums)
 
 /*
 
+  Divide up the numbers to check for prime-ness into smaller sets
+  based on command line arguments
+  (This allows GPUs with low VRAM to be able to check just as many
+  numbers as GPUs with large VRAM)
+
   for(each set)
     setup array in RAM
     copy array to VRAM
