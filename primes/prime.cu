@@ -117,15 +117,23 @@ void findPrimes(int countScale, int sectionScale)
     blockSize = 1;
   }
 
-  // TODO: check for errors on these four memory allocations
-
   // List of primes in RAM
   x = (int*) malloc(N * sizeof(int));
   nums = (int*) malloc(N * sizeof(int));
 
+  if(x == 0 || nums == 0) {
+    debug_print("Could not allocate RAM!\n");
+    exit(1);
+  }
+
   // Same list in VRAM
-  cudaMalloc(&d_x, N * sizeof(int));
-  cudaMalloc(&gpu_nums, N * sizeof(int));
+  cudaError_t error1 = cudaMalloc(&d_x, N * sizeof(int));
+  cudaError_t error2 = cudaMalloc(&gpu_nums, N * sizeof(int));
+
+  if(error1 != cudaSuccess || error2 != cudaSuccess) {
+    debug_print("Could not allocate VRAM!\n");
+    exit(1);
+  }
 
   while(previous_max < N_total) {
 
