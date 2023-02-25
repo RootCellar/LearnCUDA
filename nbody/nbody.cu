@@ -54,7 +54,7 @@ __global__ void calcAcceleration(struct particle* particles, struct particle cen
     float distance;
     calcDistance(&distance, particles[j], center_of_mass);
 
-    distance /= 10;
+    distance /= 5;
     if(distance < 2) distance = 2;
     
     float force = 1 / powf(distance, 2);
