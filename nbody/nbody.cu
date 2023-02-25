@@ -54,7 +54,7 @@ __global__ void calcAcceleration(struct particle* particles, struct particle cen
     float distance;
     calcDistance(&distance, particles[j], center_of_mass);
 
-    distance /= 3;
+    distance /= 1.5;
     if(distance < 1) distance = 1;
     
     float force = 1 / powf(distance, 2);
@@ -110,8 +110,14 @@ int main( int argc, char** argv) {
     glutInitWindowPosition(0,0);     // Location of window in screen coordinates.
     glutCreateWindow("N-Particle Simulator"); // Parameter is window title.
 
+    // Timings for displaying frames
     clock_t start_time, end_time;
     start_time = clock();
+
+    // Timings for printing physics simulation rate
+    int tick_count = 0;
+    clock_t physics_time_start, physics_time_end;
+    physics_time_start = clock();
 
     int particle_count = 128*50;
     struct particle* particles = (struct particle*) malloc(sizeof(particle) * particle_count);
@@ -157,6 +163,16 @@ int main( int argc, char** argv) {
         calcAcceleration<<<particle_count/128,128>>>(gpu_particles, center_of_mass);
 
         cudaMemcpy(particles, gpu_particles, particle_count * sizeof(struct particle), cudaMemcpyDeviceToHost);
+
+        tick_count++;
+
+        physics_time_end = clock();
+        float seconds = (physics_time_end - physics_time_start) / CLOCKS_PER_SEC;
+        if(seconds >= 1) {
+            physics_time_start = clock();
+            debug_printf("%d frames over %f seconds\n", tick_count, seconds);
+            tick_count = 0;
+        }
 
         // Draw it
 
