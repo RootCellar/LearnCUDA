@@ -33,7 +33,7 @@
 
 void DrawCircle(float cx, float cy, float r) {
 	glBegin(GL_LINE_LOOP);
-	for(float i = 0; i < 2 * PI ; i += 0.1)
+	for(float i = 0; i < 2 * PI ; i += 1.0)
 	{
 		float x = r * cosf(i);
         x /= WIDTH/HEIGHT;
@@ -86,6 +86,16 @@ __global__ void calcAcceleration(struct particle* particles, struct particle cen
     particles[j].x += particles[j].v_x;
     particles[j].y += particles[j].v_y;
 
+    particles[j].v_x *= 0.99999;
+    particles[j].v_y *= 0.99999;
+
+    if(particles[j].x > WIDTH) particles[j].x = WIDTH;
+    if(particles[j].x < 0) particles[j].x = 0;
+
+    if(particles[j].y > HEIGHT) particles[j].y = HEIGHT;
+    if(particles[j].y < 0) particles[j].y = 0;
+
+
     if(particles[j].x + particles[j].v_x > WIDTH) particles[j].v_x *= -1;
     if(particles[j].x + particles[j].v_x < 0) particles[j].v_x *= -1;
 
@@ -100,7 +110,7 @@ int main( int argc, char** argv) {
     glutInitWindowPosition(0,0);     // Location of window in screen coordinates.
     glutCreateWindow("N-Particle Simulator"); // Parameter is window title.
 
-    int particle_count = 128*20;
+    int particle_count = 128*100;
     struct particle* particles = (struct particle*) malloc(sizeof(particle) * particle_count);
     if(particles == 0) {
         printf("Could not allocate memory for particles!\n");
@@ -120,20 +130,24 @@ int main( int argc, char** argv) {
 
     // Position Particles
     for(int i = 0; i < particle_count; i++) {
-        particles[i].x = i % 100;
-        particles[i].x *= 15;
-        particles[i].y = i / 100;
-        particles[i].y *= 30;
+        particles[i].x = i % 128;
+        particles[i].x *= 4;
+        particles[i].y = i / 128;
+        particles[i].y *= 4;
 
         particles[i].v_x = 0;
         particles[i].v_y = 0;
     }
 
+    //calculate_center_of_mass(&center_of_mass, particles, particle_count);
+    center_of_mass.x = WIDTH/2;
+    center_of_mass.y = HEIGHT/2;
+
     while(1) {
 
         // Do the physics
 
-        calculate_center_of_mass(&center_of_mass, particles, particle_count);
+        //calculate_center_of_mass(&center_of_mass, particles, particle_count);
 
         cudaMemcpy(gpu_particles, particles, particle_count * sizeof(struct particle), cudaMemcpyHostToDevice);
 
