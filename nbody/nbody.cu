@@ -54,11 +54,11 @@ __global__ void calcAcceleration(struct particle* particles, struct particle cen
     float distance;
     calcDistance(&distance, particles[j], center_of_mass);
 
-    distance /= 5;
-    if(distance < 2) distance = 2;
+    distance /= 3;
+    if(distance < 1) distance = 1;
     
     float force = 1 / powf(distance, 2);
-    force /= 1;
+    force *= 0.1;
 
     float x_distance = particles[j].x - center_of_mass.x;
     float y_distance = particles[j].y - center_of_mass.y;
@@ -86,8 +86,8 @@ __global__ void calcAcceleration(struct particle* particles, struct particle cen
     particles[j].x += particles[j].v_x;
     particles[j].y += particles[j].v_y;
 
-    particles[j].v_x *= 0.99999;
-    particles[j].v_y *= 0.99999;
+    particles[j].v_x *= 0.9999;
+    particles[j].v_y *= 0.9999;
 
     if(particles[j].x > WIDTH) particles[j].x = WIDTH;
     if(particles[j].x < 0) particles[j].x = 0;
@@ -110,7 +110,10 @@ int main( int argc, char** argv) {
     glutInitWindowPosition(0,0);     // Location of window in screen coordinates.
     glutCreateWindow("N-Particle Simulator"); // Parameter is window title.
 
-    int particle_count = 128*100;
+    clock_t start_time, end_time;
+    start_time = clock();
+
+    int particle_count = 128*50;
     struct particle* particles = (struct particle*) malloc(sizeof(particle) * particle_count);
     if(particles == 0) {
         printf("Could not allocate memory for particles!\n");
@@ -131,9 +134,9 @@ int main( int argc, char** argv) {
     // Position Particles
     for(int i = 0; i < particle_count; i++) {
         particles[i].x = i % 128;
-        particles[i].x *= 4;
+        particles[i].x *= 6;
         particles[i].y = i / 128;
-        particles[i].y *= 4;
+        particles[i].y *= 6;
 
         particles[i].v_x = 0;
         particles[i].v_y = 0;
@@ -156,6 +159,11 @@ int main( int argc, char** argv) {
         cudaMemcpy(particles, gpu_particles, particle_count * sizeof(struct particle), cudaMemcpyDeviceToHost);
 
         // Draw it
+
+        end_time = clock();
+        if((float)(end_time - start_time)/CLOCKS_PER_SEC < 0.02) continue;
+
+        start_time = clock();
 
         glClear(GL_COLOR_BUFFER_BIT);
 
