@@ -51,16 +51,14 @@ __device__ void calcDistance(float* distance, struct particle one, struct partic
 __global__ void calcAcceleration(struct particle* particles, struct particle center_of_mass) {
     int j = blockIdx.x * blockDim.x + threadIdx.x;
 
-    //particles[j].v_x = 1;
-    //particles[j].v_y = 1;
-
     float distance;
     calcDistance(&distance, particles[j], center_of_mass);
 
-    if(distance < 1) distance = 1;
+    distance /= 10;
+    if(distance < 2) distance = 2;
     
     float force = 1 / powf(distance, 2);
-    force /= 10;
+    force /= 1;
 
     float x_distance = particles[j].x - center_of_mass.x;
     float y_distance = particles[j].y - center_of_mass.y;
@@ -87,6 +85,12 @@ __global__ void calcAcceleration(struct particle* particles, struct particle cen
 
     particles[j].x += particles[j].v_x;
     particles[j].y += particles[j].v_y;
+
+    if(particles[j].x + particles[j].v_x > WIDTH) particles[j].v_x *= -1;
+    if(particles[j].x + particles[j].v_x < 0) particles[j].v_x *= -1;
+
+    if(particles[j].y + particles[j].v_y > HEIGHT) particles[j].v_y *= -1;
+    if(particles[j].y + particles[j].v_y < 0) particles[j].v_y *= -1;
 }
 
 int main( int argc, char** argv) {
