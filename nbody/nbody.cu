@@ -54,6 +54,14 @@ int main( int argc, char** argv) {
     }
 
     struct particle center_of_mass;
+    float scaled_x;
+    float scaled_y;
+
+    // Position Particles
+    for(int i = 0; i < particle_count; i++) {
+        particles[i].x = i % 100;
+        particles[i].y = i / 100;
+    }
 
     while(1) {
 
@@ -63,8 +71,16 @@ int main( int argc, char** argv) {
 
 
         // Draw it
+
         glClear(GL_COLOR_BUFFER_BIT);
         DrawCircle(-0.8, 0.1, 0.01);
+
+        for(int i = 0; i < particle_count; i++) {
+            scaled_x = particles[i].x / 100;
+            scaled_y = particles[i].y / 100;
+            DrawCircle(scaled_x, scaled_y, 0.005);
+        }
+
         glutSwapBuffers();
 
         sleep(1000);
