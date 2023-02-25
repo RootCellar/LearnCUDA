@@ -51,11 +51,39 @@ __device__ void calcDistance(float* distance, struct particle one, struct partic
 __global__ void calcAcceleration(struct particle* particles, struct particle center_of_mass) {
     int j = blockIdx.x * blockDim.x + threadIdx.x;
 
-    particles[j].v_x = 1;
-    particles[j].v_y = 1;
+    //particles[j].v_x = 1;
+    //particles[j].v_y = 1;
 
     float distance;
     calcDistance(&distance, particles[j], center_of_mass);
+
+    if(distance < 1) distance = 1;
+    
+    float force = 1 / powf(distance, 2);
+    force /= 10;
+
+    float x_distance = particles[j].x - center_of_mass.x;
+    float y_distance = particles[j].y - center_of_mass.y;
+
+    float angle = atanf(y_distance/x_distance);
+
+    float v_x_add = cosf(angle) * force;
+    float v_y_add = sinf(angle) * force;
+
+    if(particles[j].x > center_of_mass.x) {
+        v_x_add *= -1;
+        v_y_add *= -1;
+    }
+
+    /*
+    if(particles[j].y > center_of_mass.y) {
+        v_y_add *= -1;
+    }
+    */
+
+    particles[j].v_x += v_x_add;
+    particles[j].v_y += v_y_add;
+
 
     particles[j].x += particles[j].v_x;
     particles[j].y += particles[j].v_y;
@@ -92,6 +120,9 @@ int main( int argc, char** argv) {
         particles[i].x *= 15;
         particles[i].y = i / 100;
         particles[i].y *= 30;
+
+        particles[i].v_x = 0;
+        particles[i].v_y = 0;
     }
 
     while(1) {
@@ -109,7 +140,10 @@ int main( int argc, char** argv) {
         // Draw it
 
         glClear(GL_COLOR_BUFFER_BIT);
-        //DrawCircle(-0.8, 0.1, 0.01);
+
+        scaled_x = (center_of_mass.x - WIDTH/2) / (WIDTH/2);
+        scaled_y = (center_of_mass.y - HEIGHT/2) / (HEIGHT/2);
+        DrawCircle(scaled_x, scaled_y, 0.01);
 
         for(int i = 0; i < particle_count; i++) {
             scaled_x = (particles[i].x - WIDTH/2) / (WIDTH/2);
