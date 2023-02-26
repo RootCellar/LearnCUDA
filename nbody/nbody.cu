@@ -29,6 +29,9 @@
 #define WIDTH 1600
 #define HEIGHT 900
 
+#define TICKS_PER_SECOND 10000.0
+#define TIME_PER_TICK (1/TICKS_PER_SECOND)
+
 #define SLOW_DOWN 0
 #define KEEP_ON_SCREEN 0
 
@@ -111,13 +114,17 @@ __global__ void calcAcceleration(struct particle* particles, struct particle cen
     }
 
     if(KEEP_ON_SCREEN) {
+
+        // Bring back inside screen bounds if the particle is somehow
+        // off screen
         if(particles[j].x > WIDTH) particles[j].x = WIDTH;
         if(particles[j].x < 0) particles[j].x = 0;
 
         if(particles[j].y > HEIGHT) particles[j].y = HEIGHT;
         if(particles[j].y < 0) particles[j].y = 0;
 
-
+        // If the particle would go off screen,
+        // bounce off the edge
         if(particles[j].x + particles[j].v_x > WIDTH) particles[j].v_x *= -1;
         if(particles[j].x + particles[j].v_x < 0) particles[j].v_x *= -1;
 
@@ -133,16 +140,34 @@ int main( int argc, char** argv) {
     glutInitWindowPosition(0,0);     // Location of window in screen coordinates.
     glutCreateWindow("N-Particle Simulator"); // Parameter is window title.
 
-    // Timings for displaying frames
-    clock_t start_time, end_time;
+
+    // Time Stuff
+
+
+    // Timing for displaying frames
+    clock_t start_time;
     start_time = clock();
 
-    // Timings for printing physics simulation rate
+    // Timing for physics frames
+    clock_t physics_start;
+    physics_start = clock();
+
+    // Timing for printing physics simulation rate
     int tick_count = 0;
-    clock_t physics_time_start, physics_time_end;
+    clock_t physics_time_start;
     physics_time_start = clock();
 
-    int particle_count = 128*100;
+    float seconds;
+    clock_t time_now;
+
+
+    // End Time Stuff
+
+
+    // Allocating and positioning particles
+
+
+    int particle_count = 128*500;
     struct particle* particles = (struct particle*) malloc(sizeof(particle) * particle_count);
     if(particles == 0) {
         printf("Could not allocate memory for particles!\n");
@@ -182,23 +207,42 @@ int main( int argc, char** argv) {
 
     cudaMemcpy(gpu_particles, particles, particle_count * sizeof(struct particle), cudaMemcpyHostToDevice);
 
+
+    // End Allocating and positioning particles
+
+
+    debug_printf("Simulating %d particles\n", particle_count);
+    debug_printf("Time per tick: %f\n", TIME_PER_TICK);
+    debug_printf("Clocks per second: %li\n", CLOCKS_PER_SEC);
+
+
     while(1) {
+
 
         // Do the physics
 
-        //calculate_center_of_mass(&center_of_mass, particles, particle_count);
+        time_now = clock();
+        seconds = (float) (time_now - physics_start) / CLOCKS_PER_SEC;
+        if(seconds >= TIME_PER_TICK) {
+            physics_start = clock();
 
-        //cudaMemcpy(gpu_particles, particles, particle_count * sizeof(struct particle), cudaMemcpyHostToDevice);
+            //calculate_center_of_mass(&center_of_mass, particles, particle_count);
 
-        calcAcceleration<<<particle_count/128,128>>>(gpu_particles, center_of_mass);
+            //cudaMemcpy(gpu_particles, particles, particle_count * sizeof(struct particle), cudaMemcpyHostToDevice);
 
-        //cudaMemcpy(particles, gpu_particles, particle_count * sizeof(struct particle), cudaMemcpyDeviceToHost);
+            calcAcceleration<<<particle_count/128,128>>>(gpu_particles, center_of_mass);
 
-        tick_count++;
+            //cudaMemcpy(particles, gpu_particles, particle_count * sizeof(struct particle), cudaMemcpyDeviceToHost);
 
-        physics_time_end = clock();
-        float seconds = (physics_time_end - physics_time_start) / CLOCKS_PER_SEC;
-        if(seconds >= 1) {
+            tick_count++;
+        }
+
+
+        // Print physics frames each second
+
+        time_now = clock();
+        seconds = (float) (time_now - physics_time_start) / CLOCKS_PER_SEC;
+        if(seconds >= 1.0) {
             physics_time_start = clock();
             debug_printf("%d frames over %f seconds\n", tick_count, seconds);
             tick_count = 0;
@@ -206,8 +250,8 @@ int main( int argc, char** argv) {
 
         // Draw it
 
-        end_time = clock();
-        if((float)(end_time - start_time)/CLOCKS_PER_SEC < 0.02) continue;
+        time_now = clock();
+        if((float) (time_now - start_time)/CLOCKS_PER_SEC < 0.02) continue;
 
         cudaMemcpy(particles, gpu_particles, particle_count * sizeof(struct particle), cudaMemcpyDeviceToHost);
 
@@ -226,7 +270,5 @@ int main( int argc, char** argv) {
         }
 
         glutSwapBuffers();
-
-        //usleep(1000);
     }
 }
