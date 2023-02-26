@@ -27,7 +27,10 @@
 #include "physics.h"
 
 #define WIDTH 1600
-#define HEIGHT 800
+#define HEIGHT 900
+
+#define SLOW_DOWN 0
+#define KEEP_ON_SCREEN 0
 
 #define PI 3.14159265359
 
@@ -45,7 +48,7 @@ void DrawCircle(float cx, float cy, float r) {
 }
 
 __device__ void calcDistance(float* distance, struct particle one, struct particle two) {
-    (*distance) = sqrtf( pow(one.x-two.x,2) + pow(one.y-two.y,2) );
+    (*distance) = sqrtf( powf(one.x-two.x,2.0f) + powf(one.y-two.y,2.0f) );
 }
 
 __global__ void calcAcceleration(struct particle* particles, struct particle center_of_mass) {
@@ -58,7 +61,7 @@ __global__ void calcAcceleration(struct particle* particles, struct particle cen
     if(distance < 1) distance = 1;
     
     float force = 1 / powf(distance, 2);
-    force *= 0.1;
+    force *= 0.02;
 
     float x_distance = particles[j].x - center_of_mass.x;
     float y_distance = particles[j].y - center_of_mass.y;
@@ -86,21 +89,25 @@ __global__ void calcAcceleration(struct particle* particles, struct particle cen
     particles[j].x += particles[j].v_x;
     particles[j].y += particles[j].v_y;
 
-    particles[j].v_x *= 0.9999;
-    particles[j].v_y *= 0.9999;
+    if( SLOW_DOWN ) {
+      particles[j].v_x *= 0.9999;
+      particles[j].v_y *= 0.9999;
+    }
 
-    if(particles[j].x > WIDTH) particles[j].x = WIDTH;
-    if(particles[j].x < 0) particles[j].x = 0;
+    if(KEEP_ON_SCREEN) {
+        if(particles[j].x > WIDTH) particles[j].x = WIDTH;
+        if(particles[j].x < 0) particles[j].x = 0;
 
-    if(particles[j].y > HEIGHT) particles[j].y = HEIGHT;
-    if(particles[j].y < 0) particles[j].y = 0;
+        if(particles[j].y > HEIGHT) particles[j].y = HEIGHT;
+        if(particles[j].y < 0) particles[j].y = 0;
 
 
-    if(particles[j].x + particles[j].v_x > WIDTH) particles[j].v_x *= -1;
-    if(particles[j].x + particles[j].v_x < 0) particles[j].v_x *= -1;
+        if(particles[j].x + particles[j].v_x > WIDTH) particles[j].v_x *= -1;
+        if(particles[j].x + particles[j].v_x < 0) particles[j].v_x *= -1;
 
-    if(particles[j].y + particles[j].v_y > HEIGHT) particles[j].v_y *= -1;
-    if(particles[j].y + particles[j].v_y < 0) particles[j].v_y *= -1;
+        if(particles[j].y + particles[j].v_y > HEIGHT) particles[j].v_y *= -1;
+        if(particles[j].y + particles[j].v_y < 0) particles[j].v_y *= -1;
+    }
 }
 
 int main( int argc, char** argv) {
@@ -139,12 +146,17 @@ int main( int argc, char** argv) {
 
     // Position Particles
     for(int i = 0; i < particle_count; i++) {
+        /*
         particles[i].x = i % 128;
-        particles[i].x *= 6;
+        particles[i].x *= 5;
         particles[i].y = i / 128;
-        particles[i].y *= 6;
+        particles[i].y *= 7;
+        */
+        particles[i].x = rand()%(WIDTH/6)+WIDTH/4;
+        particles[i].y = rand()%(HEIGHT/6)+ HEIGHT/4;
 
-        particles[i].v_x = 0;
+        particles[i].v_x = 0.01;
+        if(particles[i].x > WIDTH/2) particles[i].v_x *= -1;
         particles[i].v_y = 0;
     }
 
