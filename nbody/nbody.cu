@@ -142,7 +142,7 @@ int main( int argc, char** argv) {
     clock_t physics_time_start, physics_time_end;
     physics_time_start = clock();
 
-    int particle_count = 128*50;
+    int particle_count = 128*100;
     struct particle* particles = (struct particle*) malloc(sizeof(particle) * particle_count);
     if(particles == 0) {
         printf("Could not allocate memory for particles!\n");
@@ -180,17 +180,19 @@ int main( int argc, char** argv) {
     center_of_mass.x = WIDTH/2;
     center_of_mass.y = HEIGHT/2;
 
+    cudaMemcpy(gpu_particles, particles, particle_count * sizeof(struct particle), cudaMemcpyHostToDevice);
+
     while(1) {
 
         // Do the physics
 
         //calculate_center_of_mass(&center_of_mass, particles, particle_count);
 
-        cudaMemcpy(gpu_particles, particles, particle_count * sizeof(struct particle), cudaMemcpyHostToDevice);
+        //cudaMemcpy(gpu_particles, particles, particle_count * sizeof(struct particle), cudaMemcpyHostToDevice);
 
         calcAcceleration<<<particle_count/128,128>>>(gpu_particles, center_of_mass);
 
-        cudaMemcpy(particles, gpu_particles, particle_count * sizeof(struct particle), cudaMemcpyDeviceToHost);
+        //cudaMemcpy(particles, gpu_particles, particle_count * sizeof(struct particle), cudaMemcpyDeviceToHost);
 
         tick_count++;
 
@@ -206,6 +208,8 @@ int main( int argc, char** argv) {
 
         end_time = clock();
         if((float)(end_time - start_time)/CLOCKS_PER_SEC < 0.02) continue;
+
+        cudaMemcpy(particles, gpu_particles, particle_count * sizeof(struct particle), cudaMemcpyDeviceToHost);
 
         start_time = clock();
 

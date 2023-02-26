@@ -1,1 +1,1 @@
-nvcc -o nbody nbody.cu -lGL -lglut
+nvcc -O3 -o nbody nbody.cu -lGL -lglut
