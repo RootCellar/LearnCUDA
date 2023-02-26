@@ -34,8 +34,24 @@
 
 #define PI 3.14159265359
 
+float calcSpeed(struct particle* p) {
+    return sqrtf( powf(p->v_x,2.0f) + powf(p->v_y,2.0f) );
+}
+
+void DrawParticle(struct particle* p) {
+    glBegin(GL_POINTS);
+    float speed = calcSpeed(p);
+    float redness = speed*30;
+    glColor3f(redness, 1-redness, 1-redness);
+    float scaled_x = (p->x - WIDTH/2) / (WIDTH/2);
+    float scaled_y = (p->y - HEIGHT/2) / (HEIGHT/2);
+    glVertex2f(scaled_x, scaled_y);
+    glEnd();
+}
+
 void DrawCircle(float cx, float cy, float r) {
 	glBegin(GL_LINE_LOOP);
+    glColor3f(1.0, 1.0, 1.0);
 	for(float i = 0; i < 2 * PI ; i += 1.0)
 	{
 		float x = r * cosf(i);
@@ -202,11 +218,11 @@ int main( int argc, char** argv) {
         for(int i = 0; i < particle_count; i++) {
             scaled_x = (particles[i].x - WIDTH/2) / (WIDTH/2);
             scaled_y = (particles[i].y - HEIGHT/2) / (HEIGHT/2);
-            DrawCircle(scaled_x, scaled_y, 0.0025);
+            DrawParticle(&particles[i]);
         }
 
         glutSwapBuffers();
 
-        usleep(1000);
+        //usleep(1000);
     }
 }
