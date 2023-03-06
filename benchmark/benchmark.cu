@@ -32,6 +32,7 @@
     do {
         int runCount = 0;
         clock_t start_time = clock();
+        clock_t time_now;
         while( (time_now = clock() ) - start_time < CLOCKS_PER_SEC * SECONDS_PER_RUN) {
             function<<<BLOCKS/128, 128>>>(values);
             runCount++;
@@ -47,8 +48,8 @@
  *
 */
 
-#define BENCHMARK(x, vals, name) do { int runCount = 0; clock_t start_time = clock();\
-    while( (time_now = clock()) - start_time < CLOCKS_PER_SEC * SECONDS_PER_RUN) { x<<<BLOCKS/128, 128>>>(vals); runCount++; }\
+#define BENCHMARK(x, vals, name) do { int runCount = 0; clock_t start_time = clock(); clock_t time_now;\
+    while( ( time_now = clock() ) - start_time < CLOCKS_PER_SEC * SECONDS_PER_RUN) { x<<<BLOCKS/128, 128>>>(vals); runCount++; }\
     float seconds = (float) (time_now - start_time) / CLOCKS_PER_SEC; debug_printf(name ": %d over %f seconds\n", runCount, seconds); } while(0)
 
 __global__ void benchFloats(float* floats) {
@@ -119,6 +120,7 @@ int main(int argc, char** argv) {
 
     debug_printf("Copied %ld bytes\n", sizeof(float) * BLOCKS);
 
+    /*
     runCount = 0;
     start_time = clock();
     while( (time_now = clock() ) - start_time < CLOCKS_PER_SEC * SECONDS_PER_RUN) {
@@ -128,7 +130,11 @@ int main(int argc, char** argv) {
 
     seconds = (float) (time_now - start_time) / CLOCKS_PER_SEC;
     debug_printf("benchFloats: %d over %f seconds\n", runCount, seconds);
+    */
 
-    BENCHMARK(benchFloats, gpu_floats, "benchFloats");
+    for(int i = 0; i < 10; i++) {
+        //cudaMemcpy(gpu_floats, floats, sizeof(float) * BLOCKS, cudaMemcpyHostToDevice);
+        BENCHMARK(benchFloats, gpu_floats, "benchFloats");
+    }
 
 }
