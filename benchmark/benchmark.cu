@@ -24,8 +24,32 @@
 #define SECONDS_PER_RUN 1
 #define BLOCKS 128*1000
 
-#define BENCHMARK(x, vals) do { int runCount = 0; clock_t start_time = clock();\
-    while( (time_now = clock() ) - start_time < CLOCKS_PER_SEC * SECONDS_PER_RUN) { x<<<BLOCKS/128, 128>>>(vals); runCount++; } } while(0)
+/*
+ *
+ * BENCHMARK(function, values, "bench") will expand to the following:
+ *
+
+    do {
+    int runCount = 0;
+    clock_t start_time = clock();
+    while( (time_now = clock() ) - start_time < CLOCKS_PER_SEC * SECONDS_PER_RUN) {
+        function<<<BLOCKS/128, 128>>>(values);
+        runCount++;
+    }
+
+    float seconds = (float) (time_now - start_time) / CLOCKS_PER_SEC;
+    debug_printf("bench: %d over %f seconds\n", runCount, seconds);
+    } while(0)
+
+ *
+ * This makes benchmarking much easier. The do-while loop surrounds the whole thing just make sure
+ * it is in it's own code block and won't behave weirdly inside of other blocks (for loops, etc)
+ *
+*/
+
+#define BENCHMARK(x, vals, name) do { int runCount = 0; clock_t start_time = clock();\
+    while( (time_now = clock()) - start_time < CLOCKS_PER_SEC * SECONDS_PER_RUN) { x<<<BLOCKS/128, 128>>>(vals); runCount++; }\
+    float seconds = (float) (time_now - start_time) / CLOCKS_PER_SEC; debug_printf(name ": %d over %f seconds\n", runCount, seconds); } while(0)
 
 __global__ void benchFloats(float* floats) {
 
@@ -105,6 +129,6 @@ int main(int argc, char** argv) {
     seconds = (float) (time_now - start_time) / CLOCKS_PER_SEC;
     debug_printf("benchFloats: %d over %f seconds\n", runCount, seconds);
 
-    BENCHMARK(benchFloats, gpu_floats);
+    BENCHMARK(benchFloats, gpu_floats, "benchFloats");
 
 }
