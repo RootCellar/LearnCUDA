@@ -30,15 +30,15 @@
  *
 
     do {
-    int runCount = 0;
-    clock_t start_time = clock();
-    while( (time_now = clock() ) - start_time < CLOCKS_PER_SEC * SECONDS_PER_RUN) {
-        function<<<BLOCKS/128, 128>>>(values);
-        runCount++;
-    }
+        int runCount = 0;
+        clock_t start_time = clock();
+        while( (time_now = clock() ) - start_time < CLOCKS_PER_SEC * SECONDS_PER_RUN) {
+            function<<<BLOCKS/128, 128>>>(values);
+            runCount++;
+        }
 
-    float seconds = (float) (time_now - start_time) / CLOCKS_PER_SEC;
-    debug_printf("bench: %d over %f seconds\n", runCount, seconds);
+        float seconds = (float) (time_now - start_time) / CLOCKS_PER_SEC;
+        debug_printf("bench: %d over %f seconds\n", runCount, seconds);
     } while(0)
 
  *
