@@ -35,6 +35,7 @@
         clock_t time_now;
         while( (time_now = clock() ) - start_time < CLOCKS_PER_SEC * SECONDS_PER_RUN) {
             function<<<BLOCKS/128, 128>>>(values);
+            cudaDeviceSynchronize();
             runCount++;
         }
 
@@ -49,7 +50,7 @@
 */
 
 #define BENCHMARK(x, vals, name) do { int runCount = 0; clock_t start_time = clock(); clock_t time_now;\
-    while( ( time_now = clock() ) - start_time < CLOCKS_PER_SEC * SECONDS_PER_RUN) { x<<<BLOCKS/128, 128>>>(vals); runCount++; }\
+    while( ( time_now = clock() ) - start_time < CLOCKS_PER_SEC * SECONDS_PER_RUN) { x<<<BLOCKS/128, 128>>>(vals); cudaDeviceSynchronize(); runCount++; }\
     float seconds = (float) (time_now - start_time) / CLOCKS_PER_SEC; debug_printf(name ": %d over %f seconds\n", runCount, seconds); } while(0)
 
 __global__ void benchFloats(float* floats) {
