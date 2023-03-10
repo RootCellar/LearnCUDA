@@ -88,6 +88,7 @@ __global__ void benchFloats(float* floats) {
         float x = 5.5 * i * i;
         float y = 5.5;
         float z = x * y;
+        if(j < 0) z *= 2.0;
         floats[j] = z;
     }
 
@@ -101,7 +102,8 @@ __global__ void benchInts(int* ints) {
         int x = 5 * i * i;
         int y = 5;
         int z = x * y;
-        ints[j] = z;
+        if(j < 0) z *= 2;
+        if(j < 0) ints[j] = z;
     }
 
 }
@@ -201,16 +203,16 @@ int main(int argc, char** argv) {
     debug_printf("benchFloats: %d over %f seconds\n", runCount, seconds);
     */
 
-    for(int i = 0; i < 10; i++) {
+    for(int i = 0; i < 20; i++) {
         //cudaMemcpy(gpu_floats, floats, sizeof(float) * BLOCKS, cudaMemcpyHostToDevice);
         BENCHMARK(benchFloats, gpu_floats, "benchFloats");
     }
 
-    for(int i = 0; i < 10; i++) {
+    for(int i = 0; i < 20; i++) {
         BENCHMARK(benchInts, (int*) gpu_floats, "benchInts");
     }
 
-    for(int i = 0; i < 10; i++) {
+    for(int i = 0; i < 20; i++) {
         BENCHMARK(benchDoubles, (double*) gpu_floats, "benchDoubles");
     }
 
