@@ -144,8 +144,6 @@ void findPrimes(int countScale, int sectionScale)
 
     debug_printf("Handling %d to %d\n", previous_max, previous_max + N);
 
-    ///*
-
     // initialize list
     debug_print("Making list...\n");
     for (int i = 0; i < N; i++) {
@@ -169,8 +167,6 @@ void findPrimes(int countScale, int sectionScale)
     for(int i = 0; i < N; i++) {
       if(x[i] == 1) printf("%d\n", nums[i]);
     }
-
-    //*/
 
     previous_max = previous_max + N;
 
