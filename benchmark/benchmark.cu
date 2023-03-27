@@ -24,6 +24,8 @@
 #define SECONDS_PER_RUN 1
 #define BLOCKS 128*1000
 
+#define ITERATIONS_PER_OP (1000000)
+
 /*
  *
  * BENCHMARK(function, values, "bench") will expand to the following:
@@ -84,7 +86,7 @@ __global__ void benchFloats(float* floats) {
 
     int j = blockIdx.x * blockDim.x + threadIdx.x;
 
-    for(float i = 0; i < 1000000; i+=1) {
+    for(float i = 0; i < ITERATIONS_PER_OP; i+=1) {
         float x = 5.5 * i * i;
         float y = 5.5;
         float z = x * y;
@@ -98,7 +100,7 @@ __global__ void benchInts(int* ints) {
 
     int j = blockIdx.x * blockDim.x + threadIdx.x;
 
-    for(int i = 0; i < 1000000; i+=1) {
+    for(int i = 0; i < ITERATIONS_PER_OP; i+=1) {
         int x = 5 * i * i;
         int y = 5;
         int z = x * y;
@@ -127,7 +129,7 @@ __global__ void benchDoubles(double* doubles) {
 
     int j = blockIdx.x * blockDim.x + threadIdx.x;
 
-    for(double i = 0; i < 1000000; i+=1) {
+    for(double i = 0; i < ITERATIONS_PER_OP; i+=1) {
         double x = 5 * i * i;
         double y = 5;
         double z = x * y;
