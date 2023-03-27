@@ -47,10 +47,14 @@ __global__ void isPrime(int* x, int* nums)
     return;
   }
 
+ // When checking to see if a number is prime,
+ // you only have to search up to the square root of it.
   int num_stop = sqrtf(nums[j]);
 
   for(int i = 3; i <= num_stop; i += 2) {
         if( nums[j] % i == 0 ) {
+          // The number we are checking is prime
+          // mark it and return
           x[j] = 0;
           return;
         }
@@ -135,6 +139,7 @@ void findPrimes(int countScale, int sectionScale)
     exit(1);
   }
 
+  // Loop over each subset that the whole range to check is divided into
   while(previous_max < N_total) {
 
     debug_printf("Handling %d to %d\n", previous_max, previous_max + N);
