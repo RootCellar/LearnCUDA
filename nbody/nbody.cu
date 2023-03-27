@@ -5,7 +5,7 @@
  * 
  * Building an n-particle/n-body simulator that runs on the graphics card
  *
- * Uses some code from Ryan Brune's Orbital-Simulator
+ * Uses some OpenGL code from Ryan Brune's Orbital-Simulator
  *
 */
 
