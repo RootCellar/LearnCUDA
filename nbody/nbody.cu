@@ -212,7 +212,7 @@ int main( int argc, char** argv) {
 
 
     debug_printf("Simulating %d particles\n", particle_count);
-    debug_printf("Time per tick: %f\n", TIME_PER_TICK);
+    debug_printf("Time per tick: %f s\n", TIME_PER_TICK);
     debug_printf("Clocks per second: %li\n", CLOCKS_PER_SEC);
 
 
