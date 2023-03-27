@@ -176,18 +176,6 @@ int main(int argc, char** argv) {
 
     debug_printf("Copied %ld bytes\n", sizeof(float) * BLOCKS);
 
-    /*
-    runCount = 0;
-    start_time = clock();
-    while( (time_now = clock() ) - start_time < CLOCKS_PER_SEC * SECONDS_PER_RUN) {
-        benchFloats<<<BLOCKS/128, 128>>>(gpu_floats);
-        runCount++;
-    }
-
-    seconds = (float) (time_now - start_time) / CLOCKS_PER_SEC;
-    debug_printf("benchFloats: %d over %f seconds\n", runCount, seconds);
-    */
-
     for(int i = 0; i < BENCHMARK_TIMES; i++) {
         //cudaMemcpy(gpu_floats, floats, sizeof(float) * BLOCKS, cudaMemcpyHostToDevice);
         BENCHMARK(benchFloats, gpu_floats, "benchFloats");
