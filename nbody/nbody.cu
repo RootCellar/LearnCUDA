@@ -28,13 +28,20 @@
 #include "debug.h"
 #include "physics.h"
 
+
+// Window size
 #define WIDTH 1600
 #define HEIGHT 900
 
-#define TICKS_PER_SECOND 10000.0
+// Tick Rate
+#define TICKS_PER_SECOND (10000.0)
 #define TIME_PER_TICK (1/TICKS_PER_SECOND)
 
+// Whether or not the particles are forced to slow down over time
 #define SLOW_DOWN 0
+
+// Whether or not particles will bounce off the edges of the screen 
+// and stay in bounds.
 #define KEEP_ON_SCREEN 0
 
 #define PI 3.14159265359
