@@ -190,12 +190,6 @@ int main( int argc, char** argv) {
 
     // Position Particles
     for(int i = 0; i < particle_count; i++) {
-        /*
-        particles[i].x = i % 128;
-        particles[i].x *= 5;
-        particles[i].y = i / 128;
-        particles[i].y *= 7;
-        */
         particles[i].x = rand()%(WIDTH/6)+WIDTH/4;
         particles[i].y = rand()%(HEIGHT/6)+ HEIGHT/4;
 
