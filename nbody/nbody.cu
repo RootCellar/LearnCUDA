@@ -104,12 +104,6 @@ __global__ void calcAcceleration(struct particle* particles, struct particle cen
         v_y_add *= -1;
     }
 
-    /*
-    if(particles[j].y > center_of_mass.y) {
-        v_y_add *= -1;
-    }
-    */
-
     particles[j].v_x += v_x_add;
     particles[j].v_y += v_y_add;
 
