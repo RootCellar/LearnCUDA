@@ -25,6 +25,7 @@
 #define BLOCKS 128*1000
 
 #define ITERATIONS_PER_OP (1000000)
+#define BENCHMARK_TIMES (10)
 
 /*
  *
@@ -187,16 +188,16 @@ int main(int argc, char** argv) {
     debug_printf("benchFloats: %d over %f seconds\n", runCount, seconds);
     */
 
-    for(int i = 0; i < 10; i++) {
+    for(int i = 0; i < BENCHMARK_TIMES; i++) {
         //cudaMemcpy(gpu_floats, floats, sizeof(float) * BLOCKS, cudaMemcpyHostToDevice);
         BENCHMARK(benchFloats, gpu_floats, "benchFloats");
     }
 
-    for(int i = 0; i < 10; i++) {
+    for(int i = 0; i < BENCHMARK_TIMES; i++) {
         BENCHMARK(benchInts, (int*) gpu_floats, "benchInts");
     }
 
-    for(int i = 0; i < 10; i++) {
+    for(int i = 0; i < BENCHMARK_TIMES; i++) {
         BENCHMARK(benchDoubles, (double*) gpu_floats, "benchDoubles");
     }
 
