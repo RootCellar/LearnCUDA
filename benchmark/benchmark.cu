@@ -138,24 +138,6 @@ __global__ void benchDoubles(double* doubles) {
 
 }
 
-/*
-void benchmark(void* func, void* values, char* name) {
-    int runCount;
-    clock_t start_time, time_now;
-    float seconds;
-
-    runCount = 0;
-    start_time = clock();
-    while( (time_now = clock() ) - start_time < CLOCKS_PER_SEC * SECONDS_PER_RUN) {
-        (**func)<<<BLOCKS/128, 128>>>(values);
-        runCount++;
-    }
-
-    seconds = (float) (time_now - start_time) / CLOCKS_PER_SEC;
-    debug_printf("benchFloats: %d over %f seconds\n", runCount, seconds);
-}
-*/
-
 int main(int argc, char** argv) {
     clock_t start_time, time_now;
     int runCount;
