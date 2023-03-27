@@ -64,7 +64,7 @@ void DrawParticle(struct particle* p) {
 void DrawCircle(float cx, float cy, float r) {
 	glBegin(GL_LINE_LOOP);
     glColor3f(1.0, 1.0, 1.0);
-	for(float i = 0; i < 2 * PI ; i += 1.0)
+	for(float i = 0; i < 2 * PI ; i += 0.1)
 	{
 		float x = r * cosf(i);
         x /= WIDTH/HEIGHT;
