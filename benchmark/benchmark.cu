@@ -83,6 +83,9 @@
  * techpowerup claims.
  *
 */
+
+
+
 __global__ void benchFloats(float* floats) {
 
     int j = blockIdx.x * blockDim.x + threadIdx.x;
