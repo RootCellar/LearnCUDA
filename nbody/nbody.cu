@@ -76,7 +76,7 @@ void DrawCircle(float cx, float cy, float r) {
 }
 
 __device__ void calcDistance(float* distance, struct particle one, struct particle two) {
-    (*distance) = sqrtf( powf(one.x-two.x,2.0f) + powf(one.y-two.y,2.0f) );
+    (*distance) = sqrtf( powf(one.x - two.x, 2.0f) + powf(one.y - two.y, 2.0f) );
 }
 
 __global__ void calcAcceleration(struct particle* particles, struct particle center_of_mass) {
@@ -170,7 +170,7 @@ int main( int argc, char** argv) {
     // Allocating and positioning particles
 
 
-    int particle_count = 128*500;
+    int particle_count = 128 * 500;
     struct particle* particles = (struct particle*) malloc(sizeof(particle) * particle_count);
     if(particles == 0) {
         printf("Could not allocate memory for particles!\n");
@@ -190,8 +190,8 @@ int main( int argc, char** argv) {
 
     // Position Particles
     for(int i = 0; i < particle_count; i++) {
-        particles[i].x = rand()%(WIDTH/6)+WIDTH/4;
-        particles[i].y = rand()%(HEIGHT/6)+ HEIGHT/4;
+        particles[i].x = rand() % (WIDTH/6) + (WIDTH/4);
+        particles[i].y = rand() % (HEIGHT/6) + (HEIGHT/4);
 
         particles[i].v_x = 0.01;
         if(particles[i].x > WIDTH/2) particles[i].v_x *= -1;
