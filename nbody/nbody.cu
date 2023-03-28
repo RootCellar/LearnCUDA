@@ -75,6 +75,9 @@ void DrawCircle(float cx, float cy, float r) {
 	glEnd();
 }
 
+// Why is this function void?
+// Because functions running on the graphics card cannot return a value!
+// The value we want from this function must be passed as a parameter and set instead.
 __device__ void calcDistance(float* distance, struct particle one, struct particle two) {
     (*distance) = sqrtf( powf(one.x - two.x, 2.0f) + powf(one.y - two.y, 2.0f) );
 }
