@@ -76,12 +76,12 @@ void DrawParticle(struct particle* p) {
 void DrawCircle(float cx, float cy, float r) {
 	glBegin(GL_LINE_LOOP);
     glColor3f(1.0, 1.0, 1.0);
-	for(float i = 0; i < 2 * PI ; i += 0.1)
-	{
+	for(float i = 0; i < 2 * PI ; i += 0.1) {
 		float x = r * cosf(i);
         x /= WIDTH/HEIGHT;
 
 		float y = r * sinf(i);
+        
 		glVertex2f(x + cx, y + cy);
 	}
 	glEnd();
@@ -151,7 +151,7 @@ __global__ void calcAcceleration(struct particle* particles, struct particle cen
     }
 }
 
-int main( int argc, char** argv) {
+int main(int argc, char** argv) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_SINGLE);    // Use single color buffer and no depth buffer.
     glutInitWindowSize(WIDTH,HEIGHT);         // Size of display area, in pixels.
