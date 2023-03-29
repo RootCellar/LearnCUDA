@@ -55,7 +55,7 @@ void DrawParticle(struct particle* p) {
 
     float speed = calcSpeed(p);
     float redness = speed*40; // TODO: find a better way to calculate this
-    
+
     glColor3f(redness, 1-redness, 1-redness);
 
     float scaled_x = (p->x - WIDTH/2) / (WIDTH/2);
