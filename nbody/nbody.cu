@@ -44,6 +44,12 @@
 // and stay in bounds.
 #define KEEP_ON_SCREEN 0
 
+// Used to set the "scale"
+#define DISTANCE_MULTIPLIER (1/1.5)
+
+// Set how strong gravity is
+#define FORCE_MULTIPLIER (0.02)
+
 #define PI 3.14159265359
 
 float calcSpeed(struct particle* p) {
@@ -93,11 +99,11 @@ __global__ void calcAcceleration(struct particle* particles, struct particle cen
     float distance;
     calcDistance(&distance, particles[j], center_of_mass);
 
-    distance /= 1.5;
+    distance *= DISTANCE_MULTIPLIER;
     if(distance < 1) distance = 1;
     
     float force = 1 / powf(distance, 2);
-    force *= 0.02;
+    force *= FORCE_MULTIPLIER;
 
     float x_distance = particles[j].x - center_of_mass.x;
     float y_distance = particles[j].y - center_of_mass.y;
