@@ -45,6 +45,7 @@
 #define KEEP_ON_SCREEN 0
 
 // Used to set the "scale"
+// Make sure this evaluates as a float!
 #define DISTANCE_MULTIPLIER (1/1.5)
 
 // Set how strong gravity is
