@@ -67,6 +67,10 @@
     float seconds = (float) (time_now - start_time) / CLOCKS_PER_SEC; debug_printf(name ": %d over %f seconds\n", runCount, seconds); } while(0)
 
 
+// Do whatever x is the given number of times
+#define TIMES(x, times) do { for(int i = 0; i < times; i++) x; } while(0)
+
+
 /*
  * Performs 1 million iterations per thread, 4 floating point operations each iteration (theoretically)
  * and of course checks to see if the loop is done yet each iteration
