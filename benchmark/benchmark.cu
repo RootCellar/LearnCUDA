@@ -179,9 +179,12 @@ int main(int argc, char** argv) {
     }
 
     seconds = (float) (time_now - start_time) / CLOCKS_PER_SEC;
+    float bytes_per_sec = (float) runCount * (sizeof(float) * BLOCKS) / seconds;
+    printf("\n");
     debug_printf("cudaMemcpy: %d over %f seconds\n", runCount, seconds);
 
-    debug_printf("Copied %ld bytes\n", sizeof(float) * BLOCKS);
+    debug_printf("%ld bytes * %d times in %f seconds = \n", sizeof(float) * BLOCKS, runCount, seconds);
+    debug_printf("%f bytes per second\n\n", bytes_per_sec);
 
     TIMES( BENCHMARK(benchFloats, gpu_floats, "benchFloats"), 10);
     TIMES( BENCHMARK(benchInts, (int*) gpu_floats, "benchInts"), 10);
