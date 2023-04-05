@@ -187,6 +187,7 @@ int main(int argc, char** argv) {
     TIMES( BENCHMARK(benchInts, (int*) gpu_floats, "benchInts"), 10);
     TIMES( BENCHMARK(benchDoubles, (double*) gpu_floats, "benchDoubles"), 10);
 
+    /*
     for(int i = 0; i < BENCHMARK_TIMES; i++) {
         //cudaMemcpy(gpu_floats, floats, sizeof(float) * BLOCKS, cudaMemcpyHostToDevice);
         BENCHMARK(benchFloats, gpu_floats, "benchFloats");
@@ -199,5 +200,6 @@ int main(int argc, char** argv) {
     for(int i = 0; i < BENCHMARK_TIMES; i++) {
         BENCHMARK(benchDoubles, (double*) gpu_floats, "benchDoubles");
     }
+    */
 
 }
