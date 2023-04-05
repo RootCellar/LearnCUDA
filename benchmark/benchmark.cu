@@ -172,7 +172,7 @@ int main(int argc, char** argv) {
 
     runCount = 0;
     start_time = clock();
-    while( (time_now = clock() ) - start_time < CLOCKS_PER_SEC * SECONDS_PER_RUN) {
+    while( (time_now = clock() ) - start_time < CLOCKS_PER_SEC * SECONDS_PER_RUN * 3) {
         cudaMemcpy(gpu_floats, floats, sizeof(float) * BLOCKS, cudaMemcpyHostToDevice);
         cudaDeviceSynchronize();
         runCount++;
