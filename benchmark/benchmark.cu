@@ -207,10 +207,10 @@ int main(int argc, char** argv) {
     debug_printf("%ld bytes * %d times in %f seconds = \n", sizeof(float) * BLOCKS, runCount, seconds);
     debug_printf("%f bytes per second\n\n", bytes_per_sec);
 
-    TIMES( BENCHMARK(benchFloats, gpu_floats, "benchFloats"), 10);
-    TIMES( BENCHMARK(benchInts, (int*) gpu_floats, "benchInts"), 10);
-    TIMES( BENCHMARK(benchDoubles, (double*) gpu_floats, "benchDoubles"), 10);
-    TIMES( BENCHMARK(benchLongs, (long*) gpu_floats, "benchLongs"), 10);
+    TIMES( BENCHMARK(benchFloats, gpu_floats, "benchFloats"), BENCHMARK_TIMES);
+    TIMES( BENCHMARK(benchInts, (int*) gpu_floats, "benchInts"), BENCHMARK_TIMES);
+    TIMES( BENCHMARK(benchDoubles, (double*) gpu_floats, "benchDoubles"), BENCHMARK_TIMES);
+    TIMES( BENCHMARK(benchLongs, (long*) gpu_floats, "benchLongs"), BENCHMARK_TIMES);
 
     /*
     for(int i = 0; i < BENCHMARK_TIMES; i++) {
