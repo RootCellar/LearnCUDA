@@ -138,8 +138,8 @@ __global__ void benchDoubles(double* doubles) {
     int j = blockIdx.x * blockDim.x + threadIdx.x;
 
     for(double i = 0; i < ITERATIONS_PER_OP; i+=1) {
-        double x = 5 * i * i;
-        double y = 5;
+        double x = 5.5 * i * i;
+        double y = 5.5;
         double z = x * y;
         doubles[j] = z;
     }
