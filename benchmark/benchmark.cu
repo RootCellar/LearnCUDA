@@ -18,6 +18,7 @@
 #include <time.h>
 #include <unistd.h>
 #include <stdbool.h>
+#include <locale.h>
 
 #include "debug.h"
 
@@ -160,6 +161,11 @@ __global__ void benchLongs(long* longs) {
 }
 
 int main(int argc, char** argv) {
+
+    // set the locale so that printed numbers can be formatted
+    // with commas separating the digits
+    setlocale(LC_NUMERIC, "");
+
     clock_t start_time, time_now;
     int runCount;
     float seconds;
