@@ -146,6 +146,19 @@ __global__ void benchDoubles(double* doubles) {
 
 }
 
+__global__ void benchLongs(long* longs) {
+
+    int j = blockIdx.x * blockDim.x + threadIdx.x;
+
+    for(double i = 0; i < ITERATIONS_PER_OP; i+=1) {
+        long x = 5 * i * i;
+        long y = 5;
+        long z = x * y;
+        longs[j] = z;
+    }
+
+}
+
 int main(int argc, char** argv) {
     clock_t start_time, time_now;
     int runCount;
