@@ -46,7 +46,7 @@
 
 // Used to set the "scale"
 // Make sure this evaluates as a float!
-#define DISTANCE_MULTIPLIER (1/1.5)
+#define DISTANCE_MULTIPLIER (1.0/1.5)
 
 // Set how strong gravity is
 #define FORCE_MULTIPLIER (0.02)
