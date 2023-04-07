@@ -22,11 +22,10 @@
 
 #include "debug.h"
 
-#define SECONDS_PER_RUN (1)
 #define BLOCKS (128*1000)
-
 #define ITERATIONS_PER_OP (1000000)
 #define BENCHMARK_TIMES (10)
+#define SECONDS_PER_RUN (1)
 
 /*
  *
