@@ -202,6 +202,7 @@ int main(int argc, char** argv) {
     TIMES( BENCHMARK(benchFloats, gpu_floats, "benchFloats"), 10);
     TIMES( BENCHMARK(benchInts, (int*) gpu_floats, "benchInts"), 10);
     TIMES( BENCHMARK(benchDoubles, (double*) gpu_floats, "benchDoubles"), 10);
+    TIMES( BENCHMARK(benchLongs, (long*) gpu_floats, "benchLongs"), 10);
 
     /*
     for(int i = 0; i < BENCHMARK_TIMES; i++) {
