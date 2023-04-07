@@ -24,6 +24,9 @@
 
 #define BLOCKS (128*1000)
 #define ITERATIONS_PER_OP (1000000)
+
+#define OPS_PER_RUN ( (long) BLOCKS * ITERATIONS_PER_OP * 2 )
+
 #define BENCHMARK_TIMES (10)
 #define SECONDS_PER_RUN (1)
 
