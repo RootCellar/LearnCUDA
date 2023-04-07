@@ -208,6 +208,9 @@ int main(int argc, char** argv) {
         particles[i].x = rand() % (WIDTH/6) + (WIDTH/4);
         particles[i].y = rand() % (HEIGHT/6) + (HEIGHT/4);
 
+        particles[i].x += 5.0 * ( (float) rand() / RAND_MAX );
+        particles[i].y += 5.0 * ( (float) rand() / RAND_MAX );
+
         particles[i].v_x = 0.01;
         if(particles[i].x > WIDTH/2) particles[i].v_x *= -1;
         particles[i].v_y = 0;
