@@ -67,7 +67,7 @@
 
 #define BENCHMARK(x, vals, name) do { int runCount = 0; clock_t start_time = clock(); clock_t time_now;\
     while( ( time_now = clock() ) - start_time < CLOCKS_PER_SEC * SECONDS_PER_RUN) { x<<<BLOCKS/128, 128>>>(vals); cudaDeviceSynchronize(); runCount++; }\
-    float seconds = (float) (time_now - start_time) / CLOCKS_PER_SEC; debug_printf(name ": %d over %f seconds\n", runCount, seconds); } while(0)
+    float seconds = (float) (time_now - start_time) / CLOCKS_PER_SEC; debug_printf(name ": %'d over %'f seconds\n", runCount, seconds); } while(0)
 
 
 // Do whatever x is the given number of times
@@ -172,6 +172,9 @@ int main(int argc, char** argv) {
     int runCount;
     float seconds;
 
+    debug_printf("%'d blocks, %'d iterations per operation\n", BLOCKS, ITERATIONS_PER_OP);
+    debug_printf("Each run of each operation performs %'ld computations\n", OPS_PER_RUN);
+
     // For both mallocs, we allocate twice the space needed for an array of floats
     // because we will also benchmark doubles, which are twice the size
 
@@ -202,10 +205,10 @@ int main(int argc, char** argv) {
     seconds = (float) (time_now - start_time) / CLOCKS_PER_SEC;
     float bytes_per_sec = (float) runCount * (sizeof(float) * BLOCKS) / seconds;
     printf("\n");
-    debug_printf("cudaMemcpy: %d over %f seconds\n", runCount, seconds);
+    debug_printf("cudaMemcpy: %'d over %'f seconds\n", runCount, seconds);
 
-    debug_printf("%ld bytes * %d times in %f seconds = \n", sizeof(float) * BLOCKS, runCount, seconds);
-    debug_printf("%f bytes per second\n\n", bytes_per_sec);
+    debug_printf("%'ld bytes * %'d times in %'f seconds = \n", sizeof(float) * BLOCKS, runCount, seconds);
+    debug_printf("%'f bytes per second\n\n", bytes_per_sec);
 
     TIMES( BENCHMARK(benchFloats, gpu_floats, "benchFloats"), BENCHMARK_TIMES);
     TIMES( BENCHMARK(benchInts, (int*) gpu_floats, "benchInts"), BENCHMARK_TIMES);
