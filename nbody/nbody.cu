@@ -241,6 +241,10 @@ int main(int argc, char** argv) {
         if(seconds >= TIME_PER_TICK) {
             physics_start = clock();
 
+            // The three commented-out lines here were used when the center of mass' position was calculated,
+            // but they are now unused because copying the particle data back and forth makes the simulation *really* slow
+            // and the "center of mass" / object with gravity has been put in a static position.
+
             //calculate_center_of_mass(&center_of_mass, particles, particle_count);
 
             //cudaMemcpy(gpu_particles, particles, particle_count * sizeof(struct particle), cudaMemcpyHostToDevice);
