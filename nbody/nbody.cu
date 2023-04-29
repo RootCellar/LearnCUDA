@@ -215,7 +215,7 @@ int main(int argc, char** argv) {
     glutInitDisplayMode(GLUT_SINGLE);    // Use single color buffer and no depth buffer.
     glutInitWindowSize(WIDTH,HEIGHT);         // Size of display area, in pixels.
     glutInitWindowPosition(0,0);     // Location of window in screen coordinates.
-    glutCreateWindow("N-Particle Simulator"); // Parameter is window title.
+    glutCreateWindow("Gravity Simulator"); // Parameter is window title.
 
 
     // Time Stuff
