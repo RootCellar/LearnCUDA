@@ -50,6 +50,8 @@
  * In cases where you want lots of particles, I recommend turning down the frame rate
  * by turning up TIME_PER_DRAW
  *
+ * Also, make sure this is divisible by 128. That's the GPU thread block size.
+ *
 */ 
 #define PARTICLE_COUNT (128*500)
 
