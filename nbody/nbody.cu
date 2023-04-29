@@ -60,7 +60,7 @@
 // and stay in bounds.
 #define KEEP_ON_SCREEN 0
 
-// Used to set the "scale"
+// Used to set the scale
 // Make sure this evaluates as a float!
 #define DISTANCE_MULTIPLIER (1.0/1.5)
 
