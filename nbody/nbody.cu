@@ -3,7 +3,10 @@
  * Darian Marvel
  * 2/24/2023
  * 
- * Building an n-particle/n-body simulator that runs on the graphics card
+ * Small gravity simulator that runs on the graphics card
+ *
+ * A bunch of particles are placed with an initial velocity,
+ * and they are pulled by some object at the center of the screen
  *
  * Uses some OpenGL code from Ryan Brune's Orbital-Simulator
  *
