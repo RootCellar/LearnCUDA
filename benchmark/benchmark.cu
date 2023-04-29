@@ -91,7 +91,11 @@
  *
 */
 
-
+/*
+ * Each of these benchmarking functions looks just a little bit different from the others - why?
+ * 
+ * The compiler seems to optimize the code out in different circumstances for each data type.
+*/
 
 __global__ void benchFloats(float* floats) {
 
