@@ -338,8 +338,6 @@ int main(int argc, char** argv) {
         DrawCircle(scaled_x, scaled_y, 0.01);
 
         for(int i = 0; i < particle_count; i++) {
-            scaled_x = (particles[i].x - WIDTH/2) / (WIDTH/2);
-            scaled_y = (particles[i].y - HEIGHT/2) / (HEIGHT/2);
             DrawParticle(&particles[i]);
         }
 
