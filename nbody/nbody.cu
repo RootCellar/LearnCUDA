@@ -118,6 +118,8 @@ void DrawParticle(struct particle* p) {
     glBegin(GL_POINTS);
 
     float speed = calcSpeed(p);
+
+    // "Redness" is used to color particles based on speed
     float redness = speed*40; // TODO: find a better way to calculate this
 
     glColor3f(redness, 1-redness, 1-redness);
