@@ -176,7 +176,7 @@ int main(int argc, char** argv) {
     debug_printf("Each run of each operation performs %'ld computations\n", OPS_PER_RUN);
 
     // For both mallocs, we allocate twice the space needed for an array of floats
-    // because we will also benchmark doubles, which are twice the size
+    // because we will also benchmark doubles and longs, which are twice the size
 
     float* floats = (float*) malloc(sizeof(float) * BLOCKS * 2);
     float* gpu_floats;
