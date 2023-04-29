@@ -70,6 +70,45 @@
 
 #define PI 3.14159265359
 
+
+
+struct particle {
+
+    // Position
+    float x;
+    float y;
+
+    // Velocity
+    float v_x;
+    float v_y;
+
+};
+
+/*
+ * Calculates the center of mass of all of the given particles, and sets the given particle
+ * "center_of_mass" as the answer
+ *
+ * Not currently used
+*/
+void calculate_center_of_mass(struct particle* center_of_mass, struct particle* particles, int count) {
+    float x = 0;
+    float y = 0;
+
+    for(int i = 0; i < count; i++) {
+        x += particles[i].x;
+        y += particles[i].y;
+    }
+
+    x /= count;
+    y /= count;
+
+    center_of_mass->x = x;
+    center_of_mass->y = y;
+
+
+}
+
+
 float calcSpeed(struct particle* p) {
     return sqrtf( powf(p->v_x,2.0f) + powf(p->v_y,2.0f) );
 }
