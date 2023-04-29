@@ -40,7 +40,8 @@
 #define TIME_PER_TICK (1/TICKS_PER_SECOND)
 
 // Display Frame Rate
-#define TIME_PER_DRAW (1.0/50.0) // Seconds
+#define DRAW_FRAMES_PER_SECOND (50.0)
+#define TIME_PER_DRAW (1.0/DRAW_FRAMES_PER_SECOND) // Seconds
 
 /* 
  *
