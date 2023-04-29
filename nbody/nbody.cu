@@ -29,7 +29,6 @@
 #include <time.h>
 
 #include "debug.h"
-#include "physics.h"
 
 
 // Window size
