@@ -40,6 +40,20 @@
 #define TICKS_PER_SECOND (10000.0)
 #define TIME_PER_TICK (1/TICKS_PER_SECOND)
 
+// Display Frame Rate
+#define TIME_PER_DRAW (1.0/50.0) // Seconds
+
+/* 
+ *
+ * Particle Count
+ * Note - turning this up too high causes display drawing times to become really long!
+ * This may cause the GPU to run the simulation much slower than it actually can.
+ * In cases where you want lots of particles, I recommend turning down the frame rate
+ * by turning up TIME_PER_DRAW
+ *
+*/ 
+#define PARTICLE_COUNT (128*500)
+
 // Whether or not the particles are forced to slow down over time
 #define SLOW_DOWN 0
 
@@ -188,7 +202,7 @@ int main(int argc, char** argv) {
     // Allocating and positioning particles
 
 
-    int particle_count = 128 * 500;
+    int particle_count = PARTICLE_COUNT;
     struct particle* particles = (struct particle*) malloc(sizeof(particle) * particle_count);
     if(particles == 0) {
         printf("Could not allocate memory for particles!\n");
@@ -273,7 +287,7 @@ int main(int argc, char** argv) {
         // Draw it
 
         time_now = clock();
-        if((float) (time_now - start_time)/CLOCKS_PER_SEC < 0.02) continue;
+        if((float) (time_now - start_time)/CLOCKS_PER_SEC < TIME_PER_DRAW) continue;
 
         cudaMemcpy(particles, gpu_particles, particle_count * sizeof(struct particle), cudaMemcpyDeviceToHost);
 
