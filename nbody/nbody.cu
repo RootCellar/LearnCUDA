@@ -239,15 +239,14 @@ int main(int argc, char** argv) {
     // Allocating and positioning particles
 
 
-    int particle_count = PARTICLE_COUNT;
-    struct particle* particles = (struct particle*) malloc(sizeof(particle) * particle_count);
+    struct particle* particles = (struct particle*) malloc(sizeof(particle) * PARTICLE_COUNT);
     if(particles == 0) {
         printf("Could not allocate memory for particles!\n");
         exit(1);
     }
 
     struct particle* gpu_particles;
-    cudaMalloc(&gpu_particles, sizeof(struct particle) * particle_count);
+    cudaMalloc(&gpu_particles, sizeof(struct particle) * PARTICLE_COUNT);
     if(gpu_particles == 0) {
         printf("Could not allocate GPU memory for particles!\n");
         exit(1);
@@ -258,7 +257,7 @@ int main(int argc, char** argv) {
     float scaled_y;
 
     // Position Particles
-    for(int i = 0; i < particle_count; i++) {
+    for(int i = 0; i < PARTICLE_COUNT; i++) {
         particles[i].x = rand() % (WIDTH/6) + (WIDTH/4);
         particles[i].y = rand() % (HEIGHT/6) + (HEIGHT/4);
 
@@ -274,13 +273,13 @@ int main(int argc, char** argv) {
     center_of_mass.x = WIDTH/2;
     center_of_mass.y = HEIGHT/2;
 
-    cudaMemcpy(gpu_particles, particles, particle_count * sizeof(struct particle), cudaMemcpyHostToDevice);
+    cudaMemcpy(gpu_particles, particles, PARTICLE_COUNT * sizeof(struct particle), cudaMemcpyHostToDevice);
 
 
     // End Allocating and positioning particles
 
 
-    debug_printf("Simulating %d particles\n", particle_count);
+    debug_printf("Simulating %d particles\n", PARTICLE_COUNT);
     debug_printf("Time per tick: %f s\n", TIME_PER_TICK);
     debug_printf("Clocks per second: %li\n", CLOCKS_PER_SEC);
 
@@ -303,7 +302,7 @@ int main(int argc, char** argv) {
 
             //cudaMemcpy(gpu_particles, particles, particle_count * sizeof(struct particle), cudaMemcpyHostToDevice);
 
-            calcAcceleration<<<particle_count/128,128>>>(gpu_particles, center_of_mass);
+            calcAcceleration<<<PARTICLE_COUNT/128,128>>>(gpu_particles, center_of_mass);
 
             //cudaMemcpy(particles, gpu_particles, particle_count * sizeof(struct particle), cudaMemcpyDeviceToHost);
 
@@ -326,7 +325,7 @@ int main(int argc, char** argv) {
         time_now = clock();
         if((float) (time_now - start_time)/CLOCKS_PER_SEC < TIME_PER_DRAW) continue;
 
-        cudaMemcpy(particles, gpu_particles, particle_count * sizeof(struct particle), cudaMemcpyDeviceToHost);
+        cudaMemcpy(particles, gpu_particles, PARTICLE_COUNT * sizeof(struct particle), cudaMemcpyDeviceToHost);
 
         start_time = clock();
 
@@ -336,7 +335,7 @@ int main(int argc, char** argv) {
         scaled_y = (center_of_mass.y - HEIGHT/2) / (HEIGHT/2);
         DrawCircle(scaled_x, scaled_y, 0.01);
 
-        for(int i = 0; i < particle_count; i++) {
+        for(int i = 0; i < PARTICLE_COUNT; i++) {
             DrawParticle(&particles[i]);
         }
 
