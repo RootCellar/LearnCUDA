@@ -18,16 +18,9 @@
 
 // Includes
 
-#include <GL/gl.h>
 #include <GL/glut.h>
-#include <GL/glu.h>
 
 #include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <stdbool.h>
-
-#include <math.h>
 #include <time.h>
 
 #include "debug.h"
