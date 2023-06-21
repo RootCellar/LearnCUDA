@@ -6,7 +6,10 @@
 #define DEBUG 1
 
 /*
- * Useful debug function define I found online
+ *
+ * Debug print and printf functions that show file name, function name, and line number.
+ * I found these online.
+ *
 */
 
 #define debug_printf(fmt, ...) \
