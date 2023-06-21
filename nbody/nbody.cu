@@ -20,7 +20,6 @@
 
 #include <GL/glut.h>
 
-#include <stdio.h>
 #include <time.h>
 
 #include "debug.h"
