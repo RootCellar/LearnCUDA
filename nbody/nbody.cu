@@ -49,9 +49,9 @@
  * Note - turning this up too high causes display drawing times to become really long!
  * This may cause the GPU to run the simulation much slower than it actually can.
  * In cases where you want lots of particles, I recommend turning down the frame rate
- * by turning up TIME_PER_DRAW
+ * by turning down DRAW_FRAMES_PER_SECOND above.
  *
- * Also, make sure this is divisible by 128. That's the GPU thread block size.
+ * Also, make sure this is divisible by 128, the GPU thread block size.
  *
 */ 
 #define PARTICLE_COUNT (128*500)
