@@ -207,10 +207,10 @@ __global__ void calcAcceleration(struct particle* particles, struct particle cen
 
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_SINGLE);    // Use single color buffer and no depth buffer.
-    glutInitWindowSize(WIDTH,HEIGHT);         // Size of display area, in pixels.
-    glutInitWindowPosition(0,0);     // Location of window in screen coordinates.
-    glutCreateWindow("Gravity Simulator"); // Parameter is window title.
+    glutInitDisplayMode(GLUT_SINGLE);
+    glutInitWindowSize(WIDTH,HEIGHT);
+    glutInitWindowPosition(0,0);
+    glutCreateWindow("Gravity Simulator");
 
 
     // Time Stuff
