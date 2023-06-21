@@ -2,6 +2,8 @@
  *
  * Darian Marvel
  * 2/24/2023
+ *
+ * Personal Project, and submitted for CS241 Computer Hardware Concepts
  * 
  * Small gravity simulator that runs on the graphics card
  *
