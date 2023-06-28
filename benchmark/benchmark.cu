@@ -4,6 +4,7 @@
  * 3/06/2023
  * 
  * Benchmarking different Nvidia graphics card operations
+ * for CS241 Computer Hardware Concepts
  *
  *
 */
