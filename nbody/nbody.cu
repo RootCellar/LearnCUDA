@@ -149,16 +149,23 @@ __device__ void calcDistance(float* distance, struct particle one, struct partic
 }
 
 __global__ void calcAcceleration(struct particle* particles, struct particle center_of_mass) {
+    // The number of the particle that this thread is working on
     int j = blockIdx.x * blockDim.x + threadIdx.x;
+
+    // Calculate distance from this particle to the center of mass
 
     float distance;
     calcDistance(&distance, particles[j], center_of_mass);
 
     distance *= DISTANCE_MULTIPLIER;
-    if(distance < 1) distance = 1;
+    if(distance < 1) distance = 1; // Stop particles from rocketting off the screen
     
+    // Calculate gravitational force between this particle and center of mass
+
     float force = 1 / powf(distance, 2);
     force *= FORCE_MULTIPLIER;
+
+    // Calculate how the force should change the particle's x-axis velocity and y-axis velocity
 
     float x_distance = particles[j].x - center_of_mass.x;
     float y_distance = particles[j].y - center_of_mass.y;
@@ -173,9 +180,12 @@ __global__ void calcAcceleration(struct particle* particles, struct particle cen
         v_y_add *= -1;
     }
 
+    // Add the calculated velocity changes to the particle's current velocity
+
     particles[j].v_x += v_x_add;
     particles[j].v_y += v_y_add;
 
+    // Move the particle according to it's current velocity
 
     particles[j].x += particles[j].v_x;
     particles[j].y += particles[j].v_y;
