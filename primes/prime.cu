@@ -112,7 +112,7 @@ void findPrimes(int countScale, int sectionScale)
   int *x, *d_x;
   int *nums, *gpu_nums;
 
-  debug_print("Making block sizes...\n");
+  debug_print("Deciding block size...\n");
   int blockSize = 64;
   if( N < 4096 ) {
     blockSize = 1;
