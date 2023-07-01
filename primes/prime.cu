@@ -109,7 +109,7 @@ void findPrimes(int countScale, int sectionScale)
   debug_printf("%d numbers total, %d numbers per pass\n", N_total, N);
 
   // Pointers
-  int *x, *d_x;
+  int *x, *gpu_x;
   int *nums, *gpu_nums;
 
   debug_print("Deciding block size...\n");
@@ -128,7 +128,7 @@ void findPrimes(int countScale, int sectionScale)
   }
 
   // Same list in VRAM
-  cudaError_t error1 = cudaMalloc(&d_x, N * sizeof(int));
+  cudaError_t error1 = cudaMalloc(&gpu_x, N * sizeof(int));
   cudaError_t error2 = cudaMalloc(&gpu_nums, N * sizeof(int));
 
   if(error1 != cudaSuccess || error2 != cudaSuccess) {
@@ -153,10 +153,10 @@ void findPrimes(int countScale, int sectionScale)
 
     // Run the calculation
     debug_print("Calculating...\n");
-    isPrime<<<N/blockSize, blockSize>>>(d_x, gpu_nums);
+    isPrime<<<N/blockSize, blockSize>>>(gpu_x, gpu_nums);
 
     // Copy results back to host RAM
-    cudaMemcpy(x, d_x, N * sizeof(int), cudaMemcpyDeviceToHost);
+    cudaMemcpy(x, gpu_x, N * sizeof(int), cudaMemcpyDeviceToHost);
     debug_print("Copied back to RAM\n");
 
     // Display results
@@ -170,7 +170,7 @@ void findPrimes(int countScale, int sectionScale)
   }
 
   // Cleanup
-  cudaFree(d_x);
+  cudaFree(gpu_x);
   cudaFree(gpu_nums);
   free(x);
   free(nums);
