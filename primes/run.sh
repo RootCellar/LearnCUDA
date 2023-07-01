@@ -1,1 +1,1 @@
-time ./primes > /dev/null
+time ./primes $@ > /dev/null
