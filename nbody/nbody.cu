@@ -22,6 +22,8 @@
 
 #include <time.h>
 
+#include <locale.h>
+
 #include "debug.h"
 
 
@@ -222,6 +224,10 @@ int main(int argc, char** argv) {
     glutInitWindowPosition(0,0);
     glutCreateWindow("Gravity Simulator");
 
+    // set the locale so that printed numbers can be formatted
+    // with commas separating the digits
+    setlocale(LC_NUMERIC, "");
+
 
     // Time Stuff
 
@@ -289,9 +295,9 @@ int main(int argc, char** argv) {
     // End Allocating and positioning particles
 
 
-    debug_printf("Simulating %d particles\n", PARTICLE_COUNT);
+    debug_printf("Simulating %'d particles\n", PARTICLE_COUNT);
     debug_printf("Time per tick: %f s\n", TIME_PER_TICK);
-    debug_printf("Clocks per second: %li\n", CLOCKS_PER_SEC);
+    debug_printf("Clocks per second: %'li\n", CLOCKS_PER_SEC);
 
 
     while(1) {
@@ -326,7 +332,7 @@ int main(int argc, char** argv) {
         seconds = (float) (time_now - physics_time_start) / CLOCKS_PER_SEC;
         if(seconds >= 1.0) {
             physics_time_start = clock();
-            debug_printf("%d frames over %f seconds\n", tick_count, seconds);
+            debug_printf("%'d frames over %'f seconds\n", tick_count, seconds);
             tick_count = 0;
         }
 
