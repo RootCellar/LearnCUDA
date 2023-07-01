@@ -73,7 +73,7 @@ __global__ void isPrime(int* x, int* nums)
     copy array to VRAM
     find the primes
     copy back to RAM
-    print/write to file
+    print
 
 */
 
