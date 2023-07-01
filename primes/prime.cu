@@ -47,14 +47,11 @@ __global__ void isPrime(int* x, int* nums)
     return;
   }
 
- // When checking to see if a number is prime,
- // you only have to search up to the square root of it.
   int num_stop = sqrtf(nums[j]);
 
   for(int i = 3; i <= num_stop; i += 2) {
         if( nums[j] % i == 0 ) {
-          // The number we are checking is prime
-          // mark it and return
+          // The number this thread is checking is not prime
           x[j] = 0;
           return;
         }
