@@ -99,10 +99,7 @@ int main(int argc, char** argv)
 
 void findPrimes(int countScale, int sectionScale)
 {
-  // Just over half a billion primes at 1<<29, consumes ~5 GB VRAM
-  // if done in one pass
-  int N_total = 1<<countScale; // the number we will search up to
-  //int N_total = 100000000;
+  int N_total = 1<<countScale; // the number to search up to
   int N = N_total / (1<<sectionScale); // how many per pass
   int previous_max = 0;
 
