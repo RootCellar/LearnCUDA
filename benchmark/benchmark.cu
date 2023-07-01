@@ -198,6 +198,8 @@ int main(int argc, char** argv) {
     }
     */
 
+    // Benchmark RAM to VRAM memory transfer speeds
+
     runCount = 0;
     start_time = clock();
     while( (time_now = clock() ) - start_time < CLOCKS_PER_SEC * SECONDS_PER_RUN * 3) {
@@ -213,6 +215,10 @@ int main(int argc, char** argv) {
 
     debug_printf("%'ld bytes * %'d times in %'f seconds = \n", sizeof(float) * BLOCKS, runCount, seconds);
     debug_printf("%'f bytes per second\n\n", bytes_per_sec);
+
+    // End memory transfer benchmark
+
+    // Benchmark GPU operations
 
     TIMES( BENCHMARK(benchFloats, gpu_floats, "benchFloats"), BENCHMARK_TIMES);
     TIMES( BENCHMARK(benchInts, (int*) gpu_floats, "benchInts"), BENCHMARK_TIMES);
