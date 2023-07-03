@@ -154,7 +154,7 @@ __global__ void calcAcceleration(struct particle* particles, struct particle cen
     // The number of the particle that this thread is working on
     int j = blockIdx.x * blockDim.x + threadIdx.x;
 
-    // Calculate distance from this particle to the center of mass
+    // Calculate distance from this particle to the large object
 
     float distance;
     calcDistance(&distance, particles[j], center_of_mass);
@@ -162,7 +162,7 @@ __global__ void calcAcceleration(struct particle* particles, struct particle cen
     distance *= DISTANCE_MULTIPLIER;
     if(distance < 1) distance = 1; // Stop particles from rocketting off the screen
     
-    // Calculate gravitational force between this particle and center of mass
+    // Calculate gravitational force between this particle and the large object
 
     float force = 1 / powf(distance, 2);
     force *= FORCE_MULTIPLIER;
