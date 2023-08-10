@@ -83,6 +83,8 @@ struct particle {
 
 };
 
+
+
 /*
  * Calculates the center of mass of all of the given particles, and sets the given particle
  * "center_of_mass" as the answer
@@ -127,6 +129,8 @@ void DrawParticle(struct particle* p) {
     glEnd();
 }
 
+
+
 void DrawCircle(float cx, float cy, float r) {
 	glBegin(GL_LINE_LOOP);
     glColor3f(1.0, 1.0, 1.0);
@@ -141,15 +145,22 @@ void DrawCircle(float cx, float cy, float r) {
 	glEnd();
 }
 
+
+
 float calcSpeed(struct particle* p) {
     return sqrtf( powf(p->v_x,2.0f) + powf(p->v_y,2.0f) );
 }
+
+
+
 // Why is this function void?
 // Because functions running on the graphics card cannot return a value!
 // The value we want from this function must be passed as a parameter and set inside the function instead.
 __device__ void calcDistance(float* distance, struct particle one, struct particle two) {
     (*distance) = sqrtf( powf(one.x - two.x, 2.0f) + powf(one.y - two.y, 2.0f) );
 }
+
+
 
 __global__ void calcAcceleration(struct particle* particles, struct particle center_of_mass) {
     // The number of the particle that this thread is working on
@@ -217,6 +228,8 @@ __global__ void calcAcceleration(struct particle* particles, struct particle cen
         if(particles[j].y + particles[j].v_y < 0) particles[j].v_y *= -1;
     }
 }
+
+
 
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
@@ -300,9 +313,7 @@ int main(int argc, char** argv) {
     debug_printf("Time per tick: %f s\n", TIME_PER_TICK);
     debug_printf("Clocks per second: %'li\n", CLOCKS_PER_SEC);
 
-
     while(1) {
-
 
         // Do the physics
 
@@ -325,7 +336,6 @@ int main(int argc, char** argv) {
 
             tick_count++;
         }
-
 
         // Print physics frames each second
 
