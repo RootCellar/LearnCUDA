@@ -107,9 +107,6 @@ void calculate_center_of_mass(struct particle* center_of_mass, struct particle* 
 }
 
 
-float calcSpeed(struct particle* p) {
-    return sqrtf( powf(p->v_x,2.0f) + powf(p->v_y,2.0f) );
-}
 
 void DrawParticle(struct particle* p) {
     glBegin(GL_POINTS);
@@ -143,6 +140,9 @@ void DrawCircle(float cx, float cy, float r) {
 	glEnd();
 }
 
+float calcSpeed(struct particle* p) {
+    return sqrtf( powf(p->v_x,2.0f) + powf(p->v_y,2.0f) );
+}
 // Why is this function void?
 // Because functions running on the graphics card cannot return a value!
 // The value we want from this function must be passed as a parameter and set inside the function instead.
