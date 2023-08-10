@@ -26,6 +26,7 @@
 
 #include "debug.h"
 
+// Constants, Options
 
 // Window size
 #define WIDTH 1600
