@@ -247,8 +247,8 @@ int main(int argc, char** argv) {
 
 
     // Timing for displaying frames
-    clock_t start_time;
-    start_time = clock();
+    clock_t frames_start;
+    frames_start = clock();
 
     // Timing for physics frames
     clock_t physics_start;
@@ -350,11 +350,11 @@ int main(int argc, char** argv) {
         // Draw it
 
         time_now = clock();
-        if((float) (time_now - start_time)/CLOCKS_PER_SEC < TIME_PER_DRAW) continue;
+        if((float) (time_now - frames_start)/CLOCKS_PER_SEC < TIME_PER_DRAW) continue;
 
         cudaMemcpy(particles, gpu_particles, PARTICLE_COUNT * sizeof(struct particle), cudaMemcpyDeviceToHost);
 
-        start_time = clock();
+        frames_start = clock();
 
         glClear(GL_COLOR_BUFFER_BIT);
 
