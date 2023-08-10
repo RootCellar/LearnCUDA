@@ -69,6 +69,10 @@
 
 #define PI 3.14159265359
 
+// Functions
+
+float calcSpeed(struct particle*);
+
 
 
 struct particle {
