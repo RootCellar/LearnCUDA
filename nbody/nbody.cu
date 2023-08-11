@@ -180,13 +180,17 @@ __global__ void calcAcceleration(struct particle* particles, struct particle cen
     // The number of the particle that this thread is working on
     int j = blockIdx.x * blockDim.x + threadIdx.x;
 
-    // Calculate distance from this particle to the large object
-
     float distance;
+    float force;
+    float x_distance, y_distance;
+    float angle;
+    float v_x_add, v_y_add;
 
     #if MULTI_TICK_ENABLED
     for(int i = 0; i < MULTI_TICK_COUNT; i++) {
     #endif
+
+    // Calculate distance from this particle to the large object
 
     calcDistance(&distance, particles[j], center_of_mass);
 
@@ -195,18 +199,18 @@ __global__ void calcAcceleration(struct particle* particles, struct particle cen
     
     // Calculate gravitational force between this particle and the large object
 
-    float force = 1 / powf(distance, 2);
+    force = 1 / powf(distance, 2);
     force *= FORCE_MULTIPLIER;
 
     // Calculate how the force should change the particle's x-axis velocity and y-axis velocity
 
-    float x_distance = particles[j].x - center_of_mass.x;
-    float y_distance = particles[j].y - center_of_mass.y;
+    x_distance = particles[j].x - center_of_mass.x;
+    y_distance = particles[j].y - center_of_mass.y;
 
-    float angle = atanf(y_distance/x_distance);
+    angle = atanf(y_distance/x_distance);
 
-    float v_x_add = cosf(angle) * force;
-    float v_y_add = sinf(angle) * force;
+    v_x_add = cosf(angle) * force;
+    v_y_add = sinf(angle) * force;
 
     if(particles[j].x > center_of_mass.x) {
         v_x_add *= -1;
