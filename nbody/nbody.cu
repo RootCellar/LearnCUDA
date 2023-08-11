@@ -369,6 +369,11 @@ int main(int argc, char** argv) {
             #endif
         }
 
+        /* This fixes low render frame rate when multi-ticking
+         * CUDA stacks up the calcAcceleration() calls but then
+         * waits for them to end when copying the particles back to RAM below,
+         * causing a *very* low display frame rate
+        */
         #if MULTI_TICK_ENABLED
         cudaDeviceSynchronize();
         #endif
