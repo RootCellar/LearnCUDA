@@ -44,7 +44,7 @@
  * and system calls
 */
 #define MULTI_TICK_ENABLED 1
-#define MULTI_TICK_COUNT 100
+#define MULTI_TICK_COUNT 500
 
 // Display Frame Rate
 #define DRAW_FRAMES_PER_SECOND (40.0)
