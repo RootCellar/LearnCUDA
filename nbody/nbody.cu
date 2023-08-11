@@ -365,6 +365,10 @@ int main(int argc, char** argv) {
             #endif
         }
 
+        #if MULTI_TICK_ENABLED
+        cudaDeviceSynchronize();
+        #endif
+
         // Print physics frames each second
 
         time_now = clock();
@@ -380,9 +384,9 @@ int main(int argc, char** argv) {
         time_now = clock();
         if((float) (time_now - frames_start)/CLOCKS_PER_SEC < TIME_PER_DRAW) continue;
 
-        cudaMemcpy(particles, gpu_particles, PARTICLE_COUNT * sizeof(struct particle), cudaMemcpyDeviceToHost);
-
         frames_start = clock();
+        
+        cudaMemcpy(particles, gpu_particles, PARTICLE_COUNT * sizeof(struct particle), cudaMemcpyDeviceToHost);
 
         glClear(GL_COLOR_BUFFER_BIT);
 
