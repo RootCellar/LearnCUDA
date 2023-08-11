@@ -36,6 +36,16 @@
 #define TICKS_PER_SECOND (10000.0)
 #define TIME_PER_TICK (1/TICKS_PER_SECOND)
 
+/*
+ * Multi-Tick
+ * Each time the main() function ticks (calls calcAcceleration() on the GPU), 
+ * the GPU will perform the operation MULTI_TICK_COUNT times if enabled.
+ * This may reduce any bottlenecks, including GPU thread creation
+ * and system calls
+*/
+#define MULTI_TICK_ENABLED 1
+#define MULTI_TICK_COUNT 100
+
 // Display Frame Rate
 #define DRAW_FRAMES_PER_SECOND (40.0)
 #define TIME_PER_DRAW (1.0/DRAW_FRAMES_PER_SECOND) // Seconds
@@ -173,6 +183,11 @@ __global__ void calcAcceleration(struct particle* particles, struct particle cen
     // Calculate distance from this particle to the large object
 
     float distance;
+
+    #if MULTI_TICK_ENABLED
+    for(int i = 0; i < MULTI_TICK_COUNT; i++) {
+    #endif
+
     calcDistance(&distance, particles[j], center_of_mass);
 
     distance *= DISTANCE_MULTIPLIER;
@@ -231,6 +246,11 @@ __global__ void calcAcceleration(struct particle* particles, struct particle cen
         if(particles[j].y + particles[j].v_y > HEIGHT) particles[j].v_y *= -1;
         if(particles[j].y + particles[j].v_y < 0) particles[j].v_y *= -1;
     }
+
+    #if MULTI_TICK_ENABLED
+    }
+    #endif
+    
 }
 
 
@@ -338,7 +358,11 @@ int main(int argc, char** argv) {
 
             //cudaMemcpy(particles, gpu_particles, particle_count * sizeof(struct particle), cudaMemcpyDeviceToHost);
 
+            #if MULTI_TICK_ENABLED
+            tick_count+=MULTI_TICK_COUNT;
+            #else
             tick_count++;
+            #endif
         }
 
         // Print physics frames each second
