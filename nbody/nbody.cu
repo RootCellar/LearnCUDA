@@ -284,6 +284,7 @@ int main(int argc, char** argv) {
 
     // Timing for printing physics simulation rate
     int tick_count = 0;
+    int actual_calls = 0;
     clock_t physics_time_start;
     physics_time_start = clock();
 
@@ -367,6 +368,7 @@ int main(int argc, char** argv) {
             #else
             tick_count++;
             #endif
+            actual_calls++;
         }
 
         /* This fixes low render frame rate when multi-ticking
@@ -384,8 +386,9 @@ int main(int argc, char** argv) {
         seconds = (float) (time_now - physics_time_start) / CLOCKS_PER_SEC;
         if(seconds >= 1.0) {
             physics_time_start = clock();
-            debug_printf("%'d frames over %'f seconds\n", tick_count, seconds);
+            debug_printf("%'d frames (%'d actual calls) over %'f seconds\n", tick_count, actual_calls, seconds);
             tick_count = 0;
+            actual_calls = 0;
         }
 
         // Draw it
