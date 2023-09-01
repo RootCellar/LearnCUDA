@@ -34,7 +34,6 @@
 
 // Tick Rate
 #define TICKS_PER_SECOND (10000.0)
-#define TIME_PER_TICK (1/TICKS_PER_SECOND)
 
 /*
  * Multi-Tick
@@ -48,7 +47,6 @@
 
 // Display Frame Rate
 #define DRAW_FRAMES_PER_SECOND (40.0)
-#define TIME_PER_DRAW (1.0/DRAW_FRAMES_PER_SECOND) // Seconds
 
 /* 
  *
@@ -76,6 +74,18 @@
 
 // Set how strong gravity is
 #define FORCE_MULTIPLIER (0.02)
+
+// Calculated Constants
+
+// TIME_PER_TICK
+
+#if MULTI_TICK_ENABLED
+#define TIME_PER_TICK ( ( 1.0 * MULTI_TICK_COUNT ) / TICKS_PER_SECOND)
+#else 
+#define TIME_PER_TICK ( 1.0 / TICKS_PER_SECOND )
+#endif
+
+#define TIME_PER_DRAW (1.0/DRAW_FRAMES_PER_SECOND) // Seconds
 
 #define PI 3.14159265359
 
