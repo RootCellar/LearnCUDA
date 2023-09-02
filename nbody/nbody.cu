@@ -92,6 +92,9 @@
 // Functions
 
 float calcSpeed(struct particle*);
+void calculate_center_of_mass(struct particle*, struct particle*, int);
+void DrawCircle(float, float, float);
+void DrawParticle(struct particle*);
 
 
 
