@@ -222,3 +222,4 @@ int main(int argc, char** argv) {
     TIMES( BENCHMARK(benchLongs, (long*) gpu_floats, "benchLongs"), BENCHMARK_TIMES);
 
 }
+
