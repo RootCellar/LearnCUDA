@@ -57,7 +57,7 @@
 
         // Calculate how long this actually took and print the results
         float seconds = (float) (time_now - start_time) / CLOCKS_PER_SEC;
-        debug_printf("bench: %d over %f seconds\n", runCount, seconds);
+        debug_printf("bench: %d over %f seconds (%'.2f operations per second)\n", runCount, seconds, (float) OPS_PER_RUN * ((float)runCount/seconds));
     } while(0)
 
  *
