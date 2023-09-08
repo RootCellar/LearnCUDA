@@ -105,5 +105,5 @@ int makeImage(char* fileName, float param1, float param2) {
     fwrite(color, 1, 3, file);
 	}
 	fclose(file);
-return 1;
+	return 1;
 }
