@@ -97,8 +97,8 @@ int makeImage(char* fileName, float param1, float param2) {
 
 	FILE *file = fopen(fileName,"wb");
 	fprintf(file, "P6\n%d %d\n255\n",wid, ht);
+	static unsigned char color[3];
 	for(int i=0; i<wid*ht; i++) {
-		static unsigned char color[3];
     color[0] = pixels[i].r;
     color[1] = pixels[i].g;
     color[2] = pixels[i].b;
