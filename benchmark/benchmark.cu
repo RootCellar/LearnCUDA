@@ -209,7 +209,7 @@ int main(int argc, char** argv) {
     debug_printf("cudaMemcpy: %'d over %'f seconds\n", runCount, seconds);
 
     debug_printf("%'ld bytes * %'d times in %'f seconds = \n", sizeof(float) * BLOCKS, runCount, seconds);
-    debug_printf("%'f bytes per second\n\n", bytes_per_sec);
+    debug_printf("%'.2f bytes per second\n\n", bytes_per_sec);
 
     // End memory transfer benchmark
 
