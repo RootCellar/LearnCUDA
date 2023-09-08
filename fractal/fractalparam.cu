@@ -71,9 +71,17 @@ int makeImage(char* fileName, float param1, float param2) {
 
 	pixel* pixels;
 	pixels = (pixel*) malloc(wid*ht*sizeof(pixel));
+	if(pixels == 0) {
+        printf("Could not allocate memory for pixels!\n");
+        exit(1);
+    }
 
 	pixel* gpu_pixels;
 	cudaMalloc(&gpu_pixels, wid*ht*sizeof(pixel));
+	if(gpu_pixels == 0) {
+        printf("Could not allocate GPU memory for pixels!\n");
+        exit(1);
+    }
 
 	printf("Beginning to draw...\n");
 	draw_image<<<(wid*ht)/512,512>>>(gpu_pixels,wid,ht,param1, param2);
