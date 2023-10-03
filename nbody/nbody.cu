@@ -14,11 +14,13 @@
  *
 */
 
-
+#define GUI 0
 
 // Includes
 
+#if GUI
 #include <GL/glut.h>
+#endif
 
 #include <time.h>
 
@@ -137,7 +139,7 @@ void calculate_center_of_mass(struct particle* center_of_mass, struct particle* 
 }
 
 
-
+#if GUI
 void DrawParticle(struct particle* p) {
     glBegin(GL_POINTS);
 
@@ -155,9 +157,10 @@ void DrawParticle(struct particle* p) {
 
     glEnd();
 }
+#endif
 
 
-
+#if GUI
 void DrawCircle(float cx, float cy, float r) {
 	glBegin(GL_LINE_LOOP);
     glColor3f(1.0, 1.0, 1.0);
@@ -171,6 +174,7 @@ void DrawCircle(float cx, float cy, float r) {
 	}
 	glEnd();
 }
+#endif
 
 
 
@@ -273,11 +277,16 @@ __global__ void calcAcceleration(struct particle* particles, struct particle cen
 
 
 int main(int argc, char** argv) {
+
+    #if GUI
+    
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_SINGLE);
     glutInitWindowSize(WIDTH,HEIGHT);
     glutInitWindowPosition(0,0);
     glutCreateWindow("Gravity Simulator");
+    
+    #endif
 
     // set the locale so that printed numbers can be formatted
     // with commas separating the digits
@@ -406,6 +415,8 @@ int main(int argc, char** argv) {
 
         // Draw it
 
+        #if GUI
+
         time_now = clock();
         if((float) (time_now - frames_start)/CLOCKS_PER_SEC < TIME_PER_DRAW) continue;
 
@@ -424,5 +435,8 @@ int main(int argc, char** argv) {
         }
 
         glutSwapBuffers();
+
+        #endif
+        
     }
 }
