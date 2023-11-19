@@ -134,8 +134,6 @@ void calculate_center_of_mass(struct particle* center_of_mass, struct particle* 
 
     center_of_mass->x = x;
     center_of_mass->y = y;
-
-
 }
 
 
@@ -179,7 +177,7 @@ void DrawCircle(float cx, float cy, float r) {
 
 
 float calcSpeed(struct particle* p) {
-    return sqrtf( powf(p->v_x,2.0f) + powf(p->v_y,2.0f) );
+    return sqrtf( powf(p->v_x, 2.0f) + powf(p->v_y, 2.0f) );
 }
 
 
@@ -194,6 +192,7 @@ __device__ void calcDistance(float* distance, struct particle one, struct partic
 
 
 __global__ void calcAcceleration(struct particle* particles, struct particle center_of_mass) {
+
     // The number of the particle that this thread is working on
     int j = blockIdx.x * blockDim.x + threadIdx.x;
 
